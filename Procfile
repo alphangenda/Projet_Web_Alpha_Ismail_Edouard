@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn Projet_Web_Alpha_Ismail_Edouard.wsgi
