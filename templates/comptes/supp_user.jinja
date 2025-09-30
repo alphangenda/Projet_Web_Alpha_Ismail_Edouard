@@ -1,0 +1,102 @@
+{% extends "_modele.jinja" %}
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>🛡️ Administration</h1>
+        <p>Gestion des utilisateurs et contrôle des accès</p>
+    </div>
+
+    <div class="admin-panel">
+        <div class="stats">
+            <div class="stat-card" style="background: linear-gradient(135deg, #6c5ce7 0%, #341f97 100%);">
+                <h3>{{ stats.total_users }}</h3>
+                <p>Utilisateurs totaux</p>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%);">
+                <h3>{{ stats.active_clients }}</h3>
+                <p>Clients actifs</p>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);">
+                <h3>{{ stats.admins }}</h3>
+                <p>Administrateurs</p>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);">
+                <h3>{{ stats.inactive_users }}</h3>
+                <p>Comptes inactifs</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Rechercher un utilisateur...">
+                <select id="statusFilter">
+                    <option value="">Tous les statuts</option>
+                    <option value="client">Clients</option>
+                    <option value="admin">Administrateurs</option>
+                    <option value="inactive">Inactifs</option>
+                </select>
+            </div>
+            <button class="btn btn-primary">
+                Nouvel utilisateur
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Email</th>
+                        <th>Statut</th>
+                        <th>Date d'inscription</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">{{ user.nom }}</div>
+                                <span>{{ user.nom }}</span>
+                            </div>
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td><span class="status {{ user.statut|lower }}">{{ user.statut }}</span></td>
+                        <td>{{ user.date_inscription|strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-view" onclick="viewProfile('{{ user.nom }}')">👁️ Voir</button>
+                                <button class="btn btn-delete"
+                                    onclick="confirmDelete('{{ user.nom }}', '{{ user.email }}')">🗑️ Supprimer</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <button>← Précédent</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>Suivant →</button>
+        </div>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>Confirmation de suppression</h3>
+        <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong id="deleteUserName"></strong> ?</p>
+        <p><small>Email: <span id="deleteUserEmail"></span></small></p>
+        <p style="color: #d63031; margin-top: 15px;"><strong>Cette action est irréversible.</strong></p>
+        <div class="modal-actions">
+            <button class="btn" style="background: #ddd; color: #333;">Annuler</button>
+            <button class="btn btn-delete">Confirmer la suppression</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

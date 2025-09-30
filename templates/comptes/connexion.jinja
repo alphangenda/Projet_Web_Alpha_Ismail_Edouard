@@ -1,0 +1,37 @@
+{% extends "_modele.jinja" %}
+{% block content %}
+<div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 400px; margin: auto; margin-top: 50px;">
+    <h2 class="text-center mb-4 text-success">
+        <i class="bi bi-person-plus-fill"></i> Connexion
+    </h2>
+    <form method="post" action="/connexion">
+        <div class="mb-3">
+            <label for="username" class="form-label">
+                <i class="bi bi-person-circle"></i> Nom d'utilisateur
+            </label>
+            <input type="text" id="username" name="username" class="form-control rounded-pill" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">
+                <i class="bi bi-envelope-fill"></i> Email
+            </label>
+            <input type="email" id="email" name="email" class="form-control rounded-pill" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">
+                <i class="bi bi-lock-fill"></i> Mot de passe
+            </label>
+            <input type="password" id="password" name="password" class="form-control rounded-pill" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 rounded-pill shadow-sm">
+            <i class="bi bi-check2-circle"></i> S'inscrire
+        </button>
+    </form>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+{% endblock %}
