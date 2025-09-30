@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import RegisterForm, CustomAuthenticationForm
 from django.contrib import messages
@@ -59,4 +60,16 @@ def inscription(request):
     """
     Vue pour la page d'inscription (placeholder)
     """
-    return placeholder_view(request)
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Compte créé avec succès !')
+            return redirect('connexion')
+        else:
+            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
+    else:
+        form = RegisterForm()
+
+    return render(request, "ecoflex/inscription.html", {'form':form})
