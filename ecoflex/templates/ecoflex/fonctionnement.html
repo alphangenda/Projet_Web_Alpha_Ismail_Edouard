@@ -6,15 +6,15 @@
     <div class="container mt-5 gap-0">
 
         <div class="mb-4">
-            <label for="modeSelect"><strong>Choisissez votre mode :</strong></label>
-            <select id="modeSelect" class="form-select" style="width: 250px; display: inline-block;">
+            <label for="choix-fonctionnement"><strong>Choisissez votre mode :</strong></label>
+            <select id="choix-fonctionnement" class="form-select" style="width: 250px; display: inline-block;">
                 <option value="velo" selected>Vélo</option>
                 <option value="trottinette">Trottinette</option>
                 <option value="voiture">Voiture</option>
             </select>
         </div>
 
-        <div id="bloc-velo">
+        <div id="bloc-velo" class="bloc-fonctionnement">
             <div style="display: grid; grid-template-rows: auto auto auto; margin: 20px;">
                 <div style="display: grid; grid-template-columns: 35% 65%">
                     <div style="padding: 20px;">
@@ -123,8 +123,7 @@
             </div>
         </div>
 
-        <div id="bloc-trottinette" style="display: none;">
-        <!-- ton code trottinette ici -->
+        <div id="bloc-trottinette" class="bloc-fonctionnement" style="display: none;">
             <div style="display: grid; grid-template-rows: auto auto auto; margin: 20px;">
                 <div style="display: grid; grid-template-columns: 35% 65%">
                     <div style="padding: 20px;">
@@ -175,7 +174,6 @@
                             <ul>
                                 <li>Entrer le code de votre carte membre à 5 chiffres sur l’interface</li>
                                 <li>Scanner votre carte membre ajoutée à votre compte</li>
-                                <li>Scanner le QR code via l’application mobile</li>
                             </ul>
                             <p><em>Sécurité :</em> La trottinette est verrouillée tant qu’elle n’est pas déverrouillée.</p>
                             <ul>
@@ -236,8 +234,7 @@
             </div>
         </div>
 
-        <div id="bloc-voiture" style="display: none;">
-        <!-- ton code voiture ici -->
+        <div id="bloc-voiture" class="bloc-fonctionnement" style="display: none;">
             <div style="display: grid; grid-template-rows: auto auto auto auto; margin: 20px;">
                 <div style="display: grid; grid-template-columns: 35% 65%">
                     <div style="padding: 20px;">
@@ -345,11 +342,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
     </div>
+    <script src="{% static 'ecoflex/js/fonctionnement.js' %}"></script>
 {% endblock %}
