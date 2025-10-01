@@ -12,7 +12,6 @@
                     <p class="mb-0 text-muted">Administration des comptes utilisateur</p>
                 </div>
                 <div class="card-body">
-                    {% if user.is_staff %}
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead class="table-light">
@@ -68,11 +67,9 @@
                             <strong>Note:</strong> La désactivation d'un compte empêche l'utilisateur de se connecter sans supprimer ses données.
                         </div>
 
-                    {% else %}
                         <div class="alert alert-danger">
                             Vous n'avez pas les permissions nécessaires pour accéder à cette page.
                         </div>
-                    {% endif %}
                 </div>
             </div>
         </div>

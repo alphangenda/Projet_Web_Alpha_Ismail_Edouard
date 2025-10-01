@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container mt-5">
-    {% if user.is_authenticated %}
     <div class="row">
         <div class="col-md-4">
             <div class="card shadow-sm mb-4">
@@ -154,7 +153,6 @@
         </div>
     </div>
 
-    {% else %}
     <div class="row">
         <div class="col-12">
             <div class="alert alert-warning text-center">
@@ -163,6 +161,5 @@
             </div>
         </div>
     </div>
-    {% endif %}
 </div>
 {% endblock %}
