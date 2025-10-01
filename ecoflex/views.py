@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import RegisterForm, CustomAuthenticationForm
+from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
@@ -98,3 +98,15 @@ def inscription(request):
         form = RegisterForm()
 
     return render(request, "ecoflex/inscription.html", {'form': form})
+
+def modifier_profil(request):
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profil mis à jour avec succès !")
+            return redirect("profil")
+    else:
+        form = ProfileForm(instance=request.user)
+
+    return render(request, "ecoflex/modifier_profil.html", {"form": form})

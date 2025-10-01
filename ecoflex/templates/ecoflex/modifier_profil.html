@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Accueil - EcoFlex{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4" style="width: 1000px;">
+        <h2 class="mb-4">Modifier vos informations personnelles</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} mb-3">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <div class="text-danger small">{{ form.last_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <div class="text-danger small">{{ form.first_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger small">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.phone_number.label_tag }}
+                {{ form.phone_number }}
+                {% if form.phone_number.errors %}
+                    <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.birth_date.label_tag }}
+                {{ form.birth_date }}
+                {% if form.birth_date.errors %}
+                    <div class="text-danger small">{{ form.birth_date.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.address.label_tag }}
+                {{ form.address }}
+                {% if form.address.errors %}
+                    <div class="text-danger small">{{ form.address.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.city.label_tag }}
+                {{ form.city }}
+                {% if form.city.errors %}
+                    <div class="text-danger small">{{ form.city.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.province.label_tag }}
+                {{ form.province }}
+                {% if form.province.errors %}
+                    <div class="text-danger small">{{ form.province.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.postal_code.label_tag }}
+                {{ form.postal_code }}
+                {% if form.postal_code.errors %}
+                    <div class="text-danger small">{{ form.postal_code.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary bg-dark text-light border-warning shadow-sm">
+                Sauvegarder les modifications
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
