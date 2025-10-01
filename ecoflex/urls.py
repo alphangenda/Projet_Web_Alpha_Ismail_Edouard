@@ -11,5 +11,10 @@ urlpatterns = [
     path('inscription/', views.inscription, name='inscription'),
     path('gestion_users/', views.gestion_users, name='gestion_users'),
     path('action_status/<int:user_id>/', views.action_status, name='action_status'),
+    path('profil/modifier/', views.modifier_profil, name='modifier_profil'),
+
+
+
+
 
 ]
