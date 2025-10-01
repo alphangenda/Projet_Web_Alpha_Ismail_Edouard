@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import RegisterForm, CustomAuthenticationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 def accueil(request):
     return render(request, 'ecoflex/index.html')
@@ -40,18 +40,17 @@ def connexion(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                if user.is_superuser is False:
-                    login(request, user)
-                    messages.success(request, f"Bienvenue {user.username} !")
-                    return redirect('home')
-                else:
-                    user.is_staff = True
-                    login(request, user)
-                    messages.success(request, f"Bienvenue {user.username} !")
-                    return redirect('home')
+                login(request, user)
+                messages.success(request, f"Bienvenue {user.username} !")
+                return redirect('profil')
     else:
         form = CustomAuthenticationForm()
     return render(request, "ecoflex/connexion.html", {'form': form})
+
+def deconnexion(request):
+    logout(request)
+    messages.success(request, 'Vous êtes déconnecté avec succès.')
+    return redirect('accueil')
 
 def inscription(request):
     if request.method == 'POST':
