@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'ecoflex'
 ]
 
-#AUTH_USER_MODEL = "ecoflex.User"
+AUTH_USER_MODEL = "ecoflex.User"
 
 
 MIDDLEWARE = [
