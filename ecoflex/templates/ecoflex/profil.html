@@ -59,28 +59,10 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-sm-4">
-                            <strong>Nom</strong>
+                            <strong>Nom Complet</strong>
                         </div>
                         <div class="col-sm-8">
-                            <p class="mb-0">{{ user.last_name|default:"Non renseigné" }}</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row mb-3">
-                        <div class="col-sm-4">
-                            <strong>Prénom</strong>
-                        </div>
-                        <div class="col-sm-8">
-                            <p class="mb-0">{{ user.first_name|default:"Non renseigné" }}</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row mb-3">
-                        <div class="col-sm-4">
-                            <strong>Adresse</strong>
-                        </div>
-                        <div class="col-sm-8">
-                            <p class="mb-0 text-muted">Non renseignée</p>
+                            <p class="mb-0">{{ user.last_name|default:"Non renseigné" }} {{ user.first_name|default:"Non renseigné" }}</p>
                         </div>
                     </div>
                     <hr>
@@ -113,7 +95,34 @@
                     <hr>
                     <div class="row">
                         <div class="col-sm-4">
-                            <strong>Carte bancaire</strong>
+                            <strong>Adresse</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="mb-0 text-muted">Non renseignée</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Ville</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="mb-0 text-muted">Non renseignée</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Province</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="mb-0 text-muted">Non renseignée</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Code Postal</strong>
                         </div>
                         <div class="col-sm-8">
                             <p class="mb-0 text-muted">Non renseignée</p>
