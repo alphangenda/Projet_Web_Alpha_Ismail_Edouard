@@ -17,7 +17,14 @@ def tarif(request):
     return placeholder_view(request)
 
 def fonctionnement(request):
+<<<<<<< HEAD
     return placeholder_view(request)
+=======
+    """
+    Vue pour la page de fonctionnement
+    """
+    return render(request, 'ecoflex/fonctionnement.html')
+>>>>>>> 72f94696cd0d9496fdeec2cf89e1f3135062b37a
 
 def profil(request):
     return render(request, 'ecoflex/profil.html')
