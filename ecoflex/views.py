@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import RegisterForm, CustomAuthenticationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
+
+User = get_user_model()
 
 def accueil(request):
     return render(request, 'ecoflex/index.html')
@@ -17,9 +19,6 @@ def tarif(request):
     return placeholder_view(request)
 
 def fonctionnement(request):
-    """
-    Vue pour la page de fonctionnement
-    """
     return render(request, 'ecoflex/fonctionnement.html')
 
 def profil(request):
@@ -30,7 +29,38 @@ def gestion_users(request):
         messages.error(request, "Vous n'avez pas les permissions pour accéder à cette page.")
         return redirect('accueil')
 
-    return render(request, 'ecoflex/gestion_users.html')
+    users = User.objects.filter(is_superuser=False).order_by('-date_joined')
+
+    return render(request, 'ecoflex/gestion_users.html', {'users': users})
+
+def action_status(request, user_id):
+    """
+    Active ou désactive un compte utilisateur
+    """
+    if not request.user.is_authenticated or not request.user.is_staff:
+        messages.error(request, "Vous n'avez pas les permissions pour effectuer cette action.")
+        return redirect('accueil')
+
+    try:
+        user = User.objects.get(id=user_id)
+
+        if user == request.user:
+            messages.error(request, "Vous ne pouvez pas désactiver votre propre compte.")
+            return redirect('gestion_users')
+
+        if user.is_superuser:
+            messages.error(request, "Vous ne pouvez pas désactiver un superutilisateur.")
+            return redirect('gestion_users')
+
+        user.is_active = not user.is_active
+        user.save()
+
+        status = "activé" if user.is_active else "désactivé"
+        messages.success(request, f"Le compte de {user.username} a été {status}.")
+
+    except User.DoesNotExist:
+        messages.error(request, "Utilisateur introuvable.")
+    return redirect('gestion_users')
 
 def connexion(request):
     if request.method == 'POST':
@@ -40,6 +70,9 @@ def connexion(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
+                if not user.is_active:
+                    messages.error(request, "Votre compte a été désactivé. Contactez un administrateur.")
+                    return redirect('connexion')
                 login(request, user)
                 messages.success(request, f"Bienvenue {user.username} !")
                 return redirect('profil')
