@@ -74,6 +74,17 @@ class ProfileForm(forms.ModelForm):
         fields = [
             'last_name', 'first_name', 'email', 'phone_number', 'birth_date', 'address', 'city', 'province', 'postal_code'
         ]
+        labels = {
+            'last_name': 'Nom de famille',
+            'first_name': 'Prénom',
+            'email': 'Adresse e-mail',
+            'phone_number': 'Numéro de téléphone',
+            'birth_date': 'Date de naissance',
+            'address': 'Adresse',
+            'city': 'Ville',
+            'province': 'Province',
+            'postal_code': 'Code postal',
+        }
         widgets = {
             'last_name': forms.TextInput(attrs={ 'class': 'form-control', 'placeholder': 'Entrez votre nom de famille'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre prénom'}),
