@@ -49,9 +49,15 @@ def connexion(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
-                messages.success(request, f"Bienvenue {user.username} !")
-                return redirect('home')
+                if user.is_superuser is False:
+                    login(request, user)
+                    messages.success(request, f"Bienvenue {user.username} !")
+                    return redirect('home')
+                else:
+                    user.is_staff = True
+                    login(request, user)
+                    messages.success(request, f"Bienvenue {user.username} !")
+                    return redirect('home')
     else:
         form = CustomAuthenticationForm()
     return render(request, "ecoflex/connexion.html", {'form':form})
