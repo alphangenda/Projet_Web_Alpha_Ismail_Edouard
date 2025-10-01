@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mon profil - EcoFlex{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Mon profil</h3>
+                </div>
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Nom d'utilisateur:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ user.username }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Email:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ user.email }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Prénom:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ user.first_name|default:"Non renseigné" }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Nom:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ user.last_name|default:"Non renseigné" }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Statut:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {% if user.is_staff %}
+                                    <span class="badge bg-warning text-dark">Administrateur</span>
+                                {% else %}
+                                    <span class="badge bg-success">Client</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex gap-2">
+                            <a href="#" class="btn btn-primary">Modifier mes informations</a>
+                            <a href="#" class="btn btn-outline-secondary">Changer mot de passe</a>
+                        </div>
+
+                        {% if user.is_staff %}
+                            <hr>
+                            <div class="alert alert-info">
+                                <strong>Accès administrateur</strong>
+                                <p class="mb-2">Vous avez accès aux fonctionnalités d'administration.</p>
+                                <a href="{% url 'gestion_utilisateurs' %}" class="btn btn-warning">
+                                    Gestion des utilisateurs
+                                </a>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <div class="alert alert-warning">
+                            Vous devez être connecté pour accéder à votre profil.
+                            <a href="{% url 'connexion' %}" class="alert-link">Se connecter</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
