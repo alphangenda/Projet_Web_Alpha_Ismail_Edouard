@@ -65,3 +65,24 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+from .models import User
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'last_name', 'first_name', 'email', 'phone_number', 'birth_date', 'address', 'city', 'province', 'postal_code'
+        ]
+        widgets = {
+            'last_name': forms.TextInput(attrs={ 'class': 'form-control', 'placeholder': 'Entrez votre nom de famille'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre prénom'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control','placeholder': 'Entrez votre adresse e-mail'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre numéro de téléphone'}),
+            'birth_date': forms.DateInput(attrs={'class': 'form-control','type': 'date','placeholder': 'Sélectionnez votre date de naissance'}),
+            'address': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre adresse'}),
+            'city': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre ville'}),
+            'province': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre province'}),
+            'postal_code': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre code postal'
+            }),
+        }

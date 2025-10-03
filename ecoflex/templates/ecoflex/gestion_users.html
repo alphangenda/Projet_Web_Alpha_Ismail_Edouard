@@ -12,64 +12,57 @@
                     <p class="mb-0 text-muted">Administration des comptes utilisateur</p>
                 </div>
                 <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Nom d'utilisateur</th>
-                                        <th>Email</th>
-                                        <th>Statut</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Lorem Ipsum</td>
-                                        <td>lorem@ipsum.com</td>
-                                        <td><span class="badge bg-success">Actif</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">Voir profil</button>
-                                            <button class="btn btn-sm btn-warning">Désactiver</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Lorem Ipsum</td>
-                                        <td>lorem@ipsum.com</td>
-                                        <td><span class="badge bg-success">Actif</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">Voir profil</button>
-                                            <button class="btn btn-sm btn-warning">Désactiver</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Lorem Ipsum</td>
-                                        <td>lorem@ipsum.com</td>
-                                        <td><span class="badge bg-secondary">Inactif</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">Voir profil</button>
-                                            <button class="btn btn-sm btn-success">Activer</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Lorem Ipsum</td>
-                                        <td>lorem@ipsum.com</td>
-                                        <td><span class="badge bg-success">Actif</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">Voir profil</button>
-                                            <button class="btn btn-sm btn-warning">Désactiver</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nom d'utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user_item in users %}
+                                <tr>
+                                    <td>{{ user_item.username }}</td>
+                                    <td>{{ user_item.email }}</td>
+                                    <td>
+                                        {% if user_item.is_active %}
+                                            <span class="badge bg-success">Actif</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactif</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">Voir profil</a>
+                                        {% if user_item.is_active %}
+                                            <a href="{% url 'action_status' user_item.id %}"
+                                               class="btn btn-sm btn-warning"
+                                               onclick="return confirm('Êtes-vous sûr de vouloir désactiver ce compte ?')">
+                                                Désactiver
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'action_status' user_item.id %}"
+                                               class="btn btn-sm btn-success"
+                                               onclick="return confirm('Êtes-vous sûr de vouloir activer ce compte ?')">
+                                                Activer
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Aucun utilisateur trouvé</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <div class="alert alert-info mt-3">
-                            <strong>Note:</strong> La désactivation d'un compte empêche l'utilisateur de se connecter sans supprimer ses données.
-                        </div>
-
-                        <div class="alert alert-danger">
-                            Vous n'avez pas les permissions nécessaires pour accéder à cette page.
-                        </div>
+                    <div class="alert alert-info mt-3">
+                        <strong>Note:</strong> La désactivation d'un compte empêche l'utilisateur de se connecter sans supprimer ses données.
+                    </div>
                 </div>
             </div>
         </div>
