@@ -11,7 +11,7 @@ def accueil(request):
 
 def placeholder_view(request):
     return HttpResponse(
-        "<h1>Cette page n'est pas encore implémentée</h1>"
+        "<h1>Cette page n'a pas encore été implémentée</h1>"
         "<p>Retournez à <a href='/'>l'accueil</a></p>"
     )
 
