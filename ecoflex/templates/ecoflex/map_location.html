@@ -41,6 +41,24 @@ document.addEventListener("DOMContentLoaded", function () {
       .addTo(map)
       .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
       .openPopup();
+
+    fetch("/api/stations/")
+        .then(function(response) {
+                return response.json();
+            })
+        .then(function(data){
+            for (var i=0; i<data.length; i++) {
+                var station = data[i];
+                var marker = L.marker([station.latitude, station.longitude]).addTo(map);
+                marker.bindPopup(
+                    "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
+                );
+            }
+
+        })
+        .catch(function(error) {
+            console.error("Erreur lors du chargement des stations :", error);
+        });
 });
 </script>
 {% endblock %}
