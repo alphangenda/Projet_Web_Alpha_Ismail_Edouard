@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ecoflex'
+    'rest_framework',
+    'ecoflex',
 ]
 
 AUTH_USER_MODEL = "ecoflex.User"

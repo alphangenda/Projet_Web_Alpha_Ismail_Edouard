@@ -4,6 +4,10 @@ from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
+from rest_framework import generics
+from .models import Station
+from .serializers import StationSerializerJson
+
 User = get_user_model()
 
 def accueil(request):
@@ -20,6 +24,13 @@ def tarif(request):
 
 def fonctionnement(request):
     return render(request, 'ecoflex/fonctionnement.html')
+
+def map_location(request):
+    return render(request, 'ecoflex/map_location.html')
+
+class StationListAPIView(generics.ListAPIView):
+    queryset = Station.objects.filter(actif=True)
+    serializer_class = StationSerializerJson
 
 def profil(request):
     return render(request, 'ecoflex/profil.html')
