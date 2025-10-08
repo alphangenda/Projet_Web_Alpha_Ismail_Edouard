@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil - EcoFlex{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Carte interactive - EcoFlex</h2>
+
+    <div id="map" style="height: 600px; border-radius: 12px;"></div>
+
+    <div class="alert alert-info text-center mt-4" role="alert">
+        Vous pouvez zoomer, dézoomer et vous déplacer sur la carte de Québec.
+    </div>
+</div>
+
+<!-- Leaflet/CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+
+<!-- Leaflet/JS-->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var map = L.map('map').setView([46.8139, -71.2080], 13);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors & Carto'
+    }).addTo(map);
+
+    L.marker([46.8139, -71.2080])
+      .addTo(map)
+      .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
+      .openPopup();
+
+    fetch("/api/stations/")
+        .then(function(response) {
+                return response.json();
+            })
+        .then(function(data){
+            for (var i=0; i<data.length; i++) {
+                var station = data[i];
+                var marker = L.marker([station.latitude, station.longitude]).addTo(map);
+                marker.bindPopup(
+                    "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
+                );
+            }
+
+        })
+        .catch(function(error) {
+            console.error("Erreur lors du chargement des stations :", error);
+        });
+});
+</script>
+{% endblock %}

@@ -29,6 +29,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'fonctionnement' %}">Fonctionnement</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'map_location' %}">Map de location</a>
+                    </li>
                     {% if user %}
                         {% if user.is_superuser %}
                             <li class="nav-item">
@@ -91,6 +94,7 @@
                         <li><a href="{% url 'accueil' %}" class="text-white-50 text-decoration-none">Accueil</a></li>
                         <li><a href="{% url 'tarif' %}" class="text-white-50 text-decoration-none">Tarif</a></li>
                         <li><a href="{% url 'fonctionnement' %}" class="text-white-50 text-decoration-none">Fonctionnement</a></li>
+                        <li><a href="{% url 'map_location' %}" class="text-white-50 text-decoration-none">Map de location</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
