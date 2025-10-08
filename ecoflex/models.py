@@ -40,5 +40,7 @@ class Station(models.Model):
         verbose_name = "Station"
         verbose_name_plural = "Stations"
 
-        def __str__(self):
-            return f"{self.nom} ({self.type_vehicule})"
+    def __str__(self):
+        return f"{self.nom} ({self.type_vehicule})"
+
+
