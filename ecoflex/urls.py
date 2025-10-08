@@ -6,6 +6,7 @@ urlpatterns = [
     path('tarif/', views.tarif, name='tarif'),
     path('fonctionnement/', views.fonctionnement, name='fonctionnement'),
     path('map_location/', views.map_location, name='map_location'),
+    path('api/stations/', views.StationListAPIView.as_view(), name='station-list'),
     path('profil/', views.profil, name='profil'),
     path('connexion/', views.connexion, name='connexion'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
