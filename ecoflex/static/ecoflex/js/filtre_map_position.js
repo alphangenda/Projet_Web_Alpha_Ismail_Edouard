@@ -7,7 +7,7 @@ let marqueurs = [];
 let marqueurUtilisateur = null;
 let positionUtilisateur = null;
 
-//Calculer la distance entre deux points (formule de Haversine)
+//Calculer la distance entre deux points
 function calculerDistance(lat1, lon1, lat2, lon2) {
     let R = 6371;
     let dLat = (lat2 - lat1) * Math.PI / 180;
