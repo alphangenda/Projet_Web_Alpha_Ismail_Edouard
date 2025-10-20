@@ -7,7 +7,6 @@ let marqueurs = [];
 let marqueurUtilisateur = null;
 let positionUtilisateur = null;
 
-//Calculer la distance entre deux points
 function calculerDistance(lat1, lon1, lat2, lon2) {
     let R = 6371;
     let dLat = (lat2 - lat1) * Math.PI / 180;
@@ -19,8 +18,8 @@ function calculerDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-//Géocoder une adresse
 function geocoderAdresse(adresse, callback) {
+    //Ca va chercher les addresses au quebec. Vous avez pas besoin de rien installer.
     let url = 'https://nominatim.openstreetmap.org/search?format=json&q=' +
               encodeURIComponent(adresse + ', Québec, Canada');
 
@@ -44,15 +43,12 @@ function geocoderAdresse(adresse, callback) {
         });
 }
 
-//Afficher les stations filtrées
 function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicule) {
-    //Supprimer les anciens marqueurs sans enlever celui de l'utilisateur
     marqueurs.forEach(function(marqueur) {
         cartePrincipale.removeLayer(marqueur);
     });
     marqueurs = [];
 
-    //Ajouter ou mettre à jour le marqueur de position utilisateur
     if (marqueurUtilisateur) {
         cartePrincipale.removeLayer(marqueurUtilisateur);
     }
@@ -71,10 +67,8 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
         .bindPopup('<b> Votre position</b>')
         .openPopup();
 
-    //Centrer la carte sur la position
     cartePrincipale.setView([centreLat, centreLon], 14);
 
-    //Filtrer et trier les stations
     let stationsFiltrees = toutesLesStations.filter(function(station) {
         let distance = calculerDistance(centreLat, centreLon, station.latitude, station.longitude);
         let correspondDistance = distance <= distanceMax;
@@ -87,12 +81,10 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
         return false;
     });
 
-    //Trier par distance
     stationsFiltrees.sort(function(a, b) {
         return a.distance - b.distance;
     });
 
-    //Afficher les stations filtrées
     stationsFiltrees.forEach(function(station) {
         let marqueur = L.marker([station.latitude, station.longitude]).addTo(cartePrincipale);
         marqueur.bindPopup(
@@ -104,12 +96,10 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
         marqueurs.push(marqueur);
     });
 
-    //Afficher le nombre de résultats
     document.getElementById('nombreResultats').textContent = stationsFiltrees.length;
     document.getElementById('resultatsRecherche').style.display = 'block';
 }
 
-//Charger toutes les stations pour le filtre
 function chargerStationsPourFiltre() {
     fetch('/api/stations/')
         .then(function(reponse) {
@@ -123,7 +113,6 @@ function chargerStationsPourFiltre() {
         });
 }
 
-//Gestionnaire du formulaire de recherche
 function gererSoumissionFiltre(e) {
     e.preventDefault();
 
@@ -143,7 +132,6 @@ function gererSoumissionFiltre(e) {
     }
 }
 
-//Utiliser la géolocalisation
 function utiliserMaPosition() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -167,7 +155,6 @@ function utiliserMaPosition() {
     }
 }
 
-//Initialiser le filtre après le chargement de la carte
 function initialiserFiltre(carte) {
     cartePrincipale = carte;
     chargerStationsPourFiltre();
