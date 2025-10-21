@@ -82,11 +82,16 @@ def connexion(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 if not user.is_active:
-                    messages.error(request, "Votre compte a été désactivé. Contactez un administrateur.")
-                    return redirect('connexion')
-                login(request, user)
-                messages.success(request, f"Bienvenue {user.username} !")
-                return redirect('profil')
+                    form.add_error(None, "Votre compte a été désactivé. Contactez un administrateur.")
+                else:
+                    login(request, user)
+                    messages.success(request, f"Bienvenue {user.username} !")
+                    return redirect('profil')
+            else:
+                form.add_error(None, "Nom d'utilisateur ou mot de passe incorrect.")
+        else:
+            if not form.errors:
+                form.add_error(None, "Nom d'utilisateur ou mot de passe incorrect.")
     else:
         form = CustomAuthenticationForm()
     return render(request, "ecoflex/connexion.html", {'form': form})

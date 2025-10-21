@@ -1,16 +1,36 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from django import forms
+from .models import User
 
 User = get_user_model()
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        label="Nom d'utilisateur",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Entrez votre nom d\'utilisateur'
+        }),
+        error_messages={
+            'required': 'Le nom d\'utilisateur est obligatoire.'
+        }
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        label="Mot de passe",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Entrez votre mot de passe'
+        }),
+        error_messages={
+            'required': 'Le mot de passe est obligatoire.'
+        }
     )
+
+    error_messages = {
+        'invalid_login': 'Nom d\'utilisateur ou mot de passe incorrect.',
+        'inactive': 'Ce compte a été désactivé.',
+    }
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(
@@ -65,8 +85,6 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
-
-from .models import User
 
 class ProfileForm(forms.ModelForm):
     class Meta:
