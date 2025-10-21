@@ -19,7 +19,6 @@ function calculerDistance(lat1, lon1, lat2, lon2) {
 }
 
 function geocoderAdresse(adresse, callback) {
-    //Ca va chercher les addresses au quebec. Vous avez pas besoin de rien installer.
     let url = 'https://nominatim.openstreetmap.org/search?format=json&q=' +
               encodeURIComponent(adresse + ', Québec, Canada');
 
