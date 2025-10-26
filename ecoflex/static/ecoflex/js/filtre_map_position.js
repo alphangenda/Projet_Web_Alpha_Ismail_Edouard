@@ -4,7 +4,7 @@
 let cartePrincipale;
 let toutesLesStations = [];
 let marqueurs = [];
-let marqueursOriginaux = []; 
+let marqueursOriginaux = [];
 let marqueurUtilisateur = null;
 let positionUtilisateur = null;
 
@@ -135,29 +135,6 @@ function gererSoumissionFiltre(e) {
     }
 }
 
-function utiliserMaPosition() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            positionUtilisateur = {
-                lat: position.coords.latitude,
-                lon: position.coords.longitude
-            };
-
-            let distanceMax = parseFloat(document.getElementById('distanceMax').value);
-            let typeVehicule = document.getElementById('typeVehicule').value;
-
-            afficherStationsFiltrees(positionUtilisateur.lat, positionUtilisateur.lon, distanceMax, typeVehicule);
-
-            document.getElementById('adresse').value = 'Position actuelle';
-        }, function(erreur) {
-            console.error('Erreur de géolocalisation:', erreur);
-            alert('Impossible d\'obtenir votre position. Veuillez vérifier les permissions de géolocalisation.');
-        });
-    } else {
-        alert('La géolocalisation n\'est pas supportée par votre navigateur.');
-    }
-}
-
 function sauvegarderMarqueursOriginaux(marqueurs) {
     marqueursOriginaux = marqueurs;
 }
@@ -169,11 +146,6 @@ function initialiserFiltre(carte) {
     let formulaireFiltre = document.getElementById('formulaireFiltre');
     if (formulaireFiltre) {
         formulaireFiltre.addEventListener('submit', gererSoumissionFiltre);
-    }
-
-    let boutonPosition = document.getElementById('utiliserMaPosition');
-    if (boutonPosition) {
-        boutonPosition.addEventListener('click', utiliserMaPosition);
     }
 }
 
