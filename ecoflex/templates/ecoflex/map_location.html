@@ -4,7 +4,6 @@
 {% block title %}Map de location - EcoFlex{% endblock %}
 
 {% block extra_css %}
-<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 {% endblock %}
@@ -48,18 +47,16 @@
             </form>
             <div class="mt-2">
                 <button id="utiliserMaPosition" class="btn btn-outline-success btn-sm">
-                     Utiliser ma position actuelle
+                    Utiliser ma position actuelle
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Résultats de recherche -->
     <div id="resultatsRecherche" class="alert alert-info" style="display: none;">
         <strong>Résultats :</strong> <span id="nombreResultats">0</span> véhicule(s) trouvé(s)
     </div>
 
-    <!-- Carte -->
     <div id="map" style="height: 600px; border-radius: 12px;"></div>
 
     <div class="alert alert-info text-center mt-4" role="alert">
@@ -69,7 +66,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -87,6 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
       .openPopup();
 
+    var marqueurs = [];
+
     fetch("/api/stations/")
         .then(function(response) {
                 return response.json();
@@ -98,11 +96,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 marker.bindPopup(
                     "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
                 );
+                marqueurs.push(marker);
             }
 
-            //J'ai rajouter ça pour initialiser le filtre par pos après que les stations soit affichées
             if (window.initialiserFiltre) {
                 window.initialiserFiltre(map);
+            }
+            if (window.sauvegarderMarqueursOriginaux) {
+                window.sauvegarderMarqueursOriginaux(marqueurs);
             }
         })
         .catch(function(error) {
@@ -111,6 +112,5 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- Script de filtre par position -->
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
 {% endblock %}
