@@ -4,6 +4,7 @@
 let cartePrincipale;
 let toutesLesStations = [];
 let marqueurs = [];
+let marqueursOriginaux = []; 
 let marqueurUtilisateur = null;
 let positionUtilisateur = null;
 
@@ -43,6 +44,9 @@ function geocoderAdresse(adresse, callback) {
 }
 
 function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicule) {
+    marqueursOriginaux.forEach(function(marqueur) {
+        cartePrincipale.removeLayer(marqueur);
+    });
     marqueurs.forEach(function(marqueur) {
         cartePrincipale.removeLayer(marqueur);
     });
@@ -63,7 +67,7 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
 
     marqueurUtilisateur = L.marker([centreLat, centreLon], {icon: iconeUtilisateur})
         .addTo(cartePrincipale)
-        .bindPopup('<b> Votre position</b>')
+        .bindPopup('<b>📍 Votre position</b>')
         .openPopup();
 
     cartePrincipale.setView([centreLat, centreLon], 14);
@@ -154,6 +158,10 @@ function utiliserMaPosition() {
     }
 }
 
+function sauvegarderMarqueursOriginaux(marqueurs) {
+    marqueursOriginaux = marqueurs;
+}
+
 function initialiserFiltre(carte) {
     cartePrincipale = carte;
     chargerStationsPourFiltre();
@@ -170,3 +178,4 @@ function initialiserFiltre(carte) {
 }
 
 window.initialiserFiltre = initialiserFiltre;
+window.sauvegarderMarqueursOriginaux = sauvegarderMarqueursOriginaux;
