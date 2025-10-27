@@ -4,7 +4,6 @@
 {% block title %}Map de location - EcoFlex{% endblock %}
 
 {% block extra_css %}
-<<<<<<< HEAD
 <style>
     #carteMembulleBulle:hover {
         transform: scale(1.1);
@@ -33,8 +32,6 @@
     }
 </style>
 <!-- Leaflet CSS -->
-=======
->>>>>>> 383a826a022df0102121a49569e3d26b2bdc5063
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 {% endblock %}
@@ -77,14 +74,11 @@
                     <button type="submit" class="btn btn-success w-100">Rechercher</button>
                 </div>
             </form>
-<<<<<<< HEAD
             <div class="mt-2">
                 <button id="utiliserMaPosition" class="btn btn-outline-success btn-sm">
                     Utiliser ma position actuelle
                 </button>
             </div>
-=======
->>>>>>> 383a826a022df0102121a49569e3d26b2bdc5063
         </div>
     </div>
 
@@ -92,7 +86,6 @@
         <strong>Résultats :</strong> <span id="nombreResultats">0</span> véhicule(s) trouvé(s)
     </div>
 
-<<<<<<< HEAD
     <div style="position: absolute; top: 80px; right: 20px; z-index: 1000; transition: all 0.3s;"
         id="carteMembreWidget">
         <div onclick="toggleCarte()"
@@ -129,8 +122,6 @@
         </div>
     </div>
 
-=======
->>>>>>> 383a826a022df0102121a49569e3d26b2bdc5063
     <div id="map" style="height: 600px; border-radius: 12px;"></div>
 
     <div class="alert alert-info text-center mt-4" role="alert">
@@ -140,7 +131,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<<<<<<< HEAD
 <script>
     function toggleCarte() {
         const widget = document.getElementById('carteMembreWidget');
@@ -155,8 +145,6 @@
     });
 </script>
 <!-- Leaflet JS -->
-=======
->>>>>>> 383a826a022df0102121a49569e3d26b2bdc5063
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -174,7 +162,6 @@
             .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
             .openPopup();
 
-<<<<<<< HEAD
         fetch("/api/stations/")
             .then(function (response) {
                 return response.json();
@@ -197,35 +184,6 @@
                 console.error("Erreur lors du chargement des stations :", error);
             });
     });
-=======
-    var marqueurs = [];
-
-    fetch("/api/stations/")
-        .then(function(response) {
-                return response.json();
-            })
-        .then(function(data){
-            for (var i=0; i<data.length; i++) {
-                var station = data[i];
-                var marker = L.marker([station.latitude, station.longitude]).addTo(map);
-                marker.bindPopup(
-                    "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
-                );
-                marqueurs.push(marker);
-            }
-
-            if (window.initialiserFiltre) {
-                window.initialiserFiltre(map);
-            }
-            if (window.sauvegarderMarqueursOriginaux) {
-                window.sauvegarderMarqueursOriginaux(marqueurs);
-            }
-        })
-        .catch(function(error) {
-            console.error("Erreur lors du chargement des stations :", error);
-        });
-});
->>>>>>> 383a826a022df0102121a49569e3d26b2bdc5063
 </script>
 
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
