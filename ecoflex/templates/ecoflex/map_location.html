@@ -4,9 +4,36 @@
 {% block title %}Map de location - EcoFlex{% endblock %}
 
 {% block extra_css %}
+<style>
+    #carteMembulleBulle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(40, 167, 69, 0.5) !important;
+    }
+
+    #carteMembreWidget.expanded #carteMembulleBulle {
+        display: none !important;
+    }
+
+    #carteMembreWidget.expanded #carteMembreRectangle {
+        display: block !important;
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 {% endblock %}
 
 {% block content %}
@@ -19,7 +46,8 @@
             <form id="formulaireFiltre" class="row g-3">
                 <div class="col-md-4">
                     <label for="adresse" class="form-label">Adresse ou lieu</label>
-                    <input type="text" class="form-control" id="adresse" placeholder="Ex: 325 boulevard Charest Est, Québec">
+                    <input type="text" class="form-control" id="adresse"
+                        placeholder="Ex: 325 boulevard Charest Est, Québec">
                 </div>
                 <div class="col-md-3">
                     <label for="distanceMax" class="form-label">Distance maximale (km)</label>
@@ -48,18 +76,52 @@
             </form>
             <div class="mt-2">
                 <button id="utiliserMaPosition" class="btn btn-outline-success btn-sm">
-                     Utiliser ma position actuelle
+                    Utiliser ma position actuelle
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Résultats de recherche -->
     <div id="resultatsRecherche" class="alert alert-info" style="display: none;">
         <strong>Résultats :</strong> <span id="nombreResultats">0</span> véhicule(s) trouvé(s)
     </div>
 
-    <!-- Carte -->
+    <div style="position: absolute; top: 80px; right: 20px; z-index: 1000; transition: all 0.3s;"
+        id="carteMembreWidget">
+        <div onclick="toggleCarte()"
+            style="width: 60px; height: 60px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-radius: 50%; box-shadow: 0 4px 12px green; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;"
+            id="carteMembulleBulle">
+            <img src="{% static 'ecoflex/images/3425081.png' %}" alt="Carte"
+                style="width: 32px; height: 32px; object-fit: contain;">
+        </div>
+
+        <div style="background: white; border-radius: 12px; box-shadow: 0 8px 24px black; padding: 20px; min-width: 250px; display: none; border: 2px solid #28a745;"
+            id="carteMembreRectangle">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">
+                <span style="font-weight: 600; font-size: 18px; color: #28a745;">🌿 Carte Membre</span>
+                <button onclick="toggleCarte()" aria-label="Fermer"
+                    style="background: none; border: none; font-size: 24px; color: #6c757d; cursor: pointer; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: color 0.2s;">×</button>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <div
+                    style="font-size: 12px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                    Numéro de permis
+                </div>
+                <div
+                    style="font-size: 24px; font-weight: 700; color: #212529; font-family: 'Courier New', monospace; letter-spacing: 2px;">
+                    90632
+                </div>
+            </div>
+
+            <div
+                style="display: inline-block; background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-top: 12px; text-transform: uppercase;">
+                ✓ Membre Actif
+            </div>
+        </div>
+    </div>
+
     <div id="map" style="height: 600px; border-radius: 12px;"></div>
 
     <div class="alert alert-info text-center mt-4" role="alert">
@@ -69,46 +131,59 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    function toggleCarte() {
+        const widget = document.getElementById('carteMembreWidget');
+        widget.classList.toggle('expanded');
+    }
+
+    document.addEventListener('click', function (event) {
+        const widget = document.getElementById('carteMembreWidget');
+        if (widget.classList.contains('expanded') && !widget.contains(event.target)) {
+            widget.classList.remove('expanded');
+        }
+    });
+</script>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    var map = L.map('map').setView([46.8139, -71.2080], 13);
+    document.addEventListener("DOMContentLoaded", function () {
+        var map = L.map('map').setView([46.8139, -71.2080], 13);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors & Carto'
-    }).addTo(map);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors & Carto'
+        }).addTo(map);
 
-    L.marker([46.8139, -71.2080])
-      .addTo(map)
-      .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
-      .openPopup();
+        L.marker([46.8139, -71.2080])
+            .addTo(map)
+            .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
+            .openPopup();
 
-    fetch("/api/stations/")
-        .then(function(response) {
+        fetch("/api/stations/")
+            .then(function (response) {
                 return response.json();
             })
-        .then(function(data){
-            for (var i=0; i<data.length; i++) {
-                var station = data[i];
-                var marker = L.marker([station.latitude, station.longitude]).addTo(map);
-                marker.bindPopup(
-                    "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
-                );
-            }
+            .then(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var station = data[i];
+                    var marker = L.marker([station.latitude, station.longitude]).addTo(map);
+                    marker.bindPopup(
+                        "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
+                    );
+                }
 
-            //J'ai rajouter ça pour initialiser le filtre par pos après que les stations soit affichées
-            if (window.initialiserFiltre) {
-                window.initialiserFiltre(map);
-            }
-        })
-        .catch(function(error) {
-            console.error("Erreur lors du chargement des stations :", error);
-        });
-});
+                //J'ai rajouter ça pour initialiser le filtre par pos après que les stations soit affichées
+                if (window.initialiserFiltre) {
+                    window.initialiserFiltre(map);
+                }
+            })
+            .catch(function (error) {
+                console.error("Erreur lors du chargement des stations :", error);
+            });
+    });
 </script>
 
 <!-- Script de filtre par position -->
