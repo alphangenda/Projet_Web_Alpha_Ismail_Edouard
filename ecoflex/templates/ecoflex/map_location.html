@@ -31,7 +31,6 @@
         }
     }
 </style>
-<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 {% endblock %}
@@ -139,7 +138,7 @@
         }
     });
 </script>
-<!-- Leaflet JS -->
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -157,6 +156,8 @@
             .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
             .openPopup();
 
+        var marqueurs = [];
+
         fetch("/api/stations/")
             .then(function (response) {
                 return response.json();
@@ -168,11 +169,13 @@
                     marker.bindPopup(
                         "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
                     );
+                    marqueurs.push(marker);
                 }
-
-                //J'ai rajouter ça pour initialiser le filtre par pos après que les stations soit affichées
                 if (window.initialiserFiltre) {
                     window.initialiserFiltre(map);
+                }
+                if (window.sauvegarderMarqueursOriginaux) {
+                    window.sauvegarderMarqueursOriginaux(marqueurs);
                 }
             })
             .catch(function (error) {
@@ -181,5 +184,6 @@
     });
 </script>
 
+<!-- Script de filtre par position -->
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
 {% endblock %}

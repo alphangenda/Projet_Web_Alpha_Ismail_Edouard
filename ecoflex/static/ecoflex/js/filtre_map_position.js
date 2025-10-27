@@ -1,6 +1,5 @@
 /* global L */
 
-
 let cartePrincipale;
 let toutesLesStations = [];
 let marqueurs = [];
