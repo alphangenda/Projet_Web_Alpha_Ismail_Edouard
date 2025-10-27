@@ -4,6 +4,7 @@
 let cartePrincipale;
 let toutesLesStations = [];
 let marqueurs = [];
+let marqueursOriginaux = [];
 let marqueurUtilisateur = null;
 let positionUtilisateur = null;
 
@@ -43,6 +44,9 @@ function geocoderAdresse(adresse, callback) {
 }
 
 function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicule) {
+    marqueursOriginaux.forEach(function(marqueur) {
+        cartePrincipale.removeLayer(marqueur);
+    });
     marqueurs.forEach(function(marqueur) {
         cartePrincipale.removeLayer(marqueur);
     });
@@ -63,7 +67,7 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
 
     marqueurUtilisateur = L.marker([centreLat, centreLon], {icon: iconeUtilisateur})
         .addTo(cartePrincipale)
-        .bindPopup('<b> Votre position</b>')
+        .bindPopup('<b>📍 Votre position</b>')
         .openPopup();
 
     cartePrincipale.setView([centreLat, centreLon], 14);
@@ -131,27 +135,8 @@ function gererSoumissionFiltre(e) {
     }
 }
 
-function utiliserMaPosition() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            positionUtilisateur = {
-                lat: position.coords.latitude,
-                lon: position.coords.longitude
-            };
-
-            let distanceMax = parseFloat(document.getElementById('distanceMax').value);
-            let typeVehicule = document.getElementById('typeVehicule').value;
-
-            afficherStationsFiltrees(positionUtilisateur.lat, positionUtilisateur.lon, distanceMax, typeVehicule);
-
-            document.getElementById('adresse').value = 'Position actuelle';
-        }, function(erreur) {
-            console.error('Erreur de géolocalisation:', erreur);
-            alert('Impossible d\'obtenir votre position. Veuillez vérifier les permissions de géolocalisation.');
-        });
-    } else {
-        alert('La géolocalisation n\'est pas supportée par votre navigateur.');
-    }
+function sauvegarderMarqueursOriginaux(marqueurs) {
+    marqueursOriginaux = marqueurs;
 }
 
 function initialiserFiltre(carte) {
@@ -162,11 +147,7 @@ function initialiserFiltre(carte) {
     if (formulaireFiltre) {
         formulaireFiltre.addEventListener('submit', gererSoumissionFiltre);
     }
-
-    let boutonPosition = document.getElementById('utiliserMaPosition');
-    if (boutonPosition) {
-        boutonPosition.addEventListener('click', utiliserMaPosition);
-    }
 }
 
 window.initialiserFiltre = initialiserFiltre;
+window.sauvegarderMarqueursOriginaux = sauvegarderMarqueursOriginaux;
