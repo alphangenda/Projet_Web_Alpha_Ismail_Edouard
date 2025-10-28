@@ -46,8 +46,7 @@ function creerContenuPopup(station) {
         Type : ${abonnement.nom}<br>
         Temps disponibles : ${abonnement.minutes}<br>
         Prix : ${abonnement.prix}<br><br>
-        <button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')" class="btn btn-success w-100">Réserver maintenant
-        </button>`;
+        <button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')" class="btn btn-success w-100">Louer maintenant</button>`;
 
     return contenu;
 }

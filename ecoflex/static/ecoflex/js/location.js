@@ -86,16 +86,16 @@ function confirmerLocation(stationId, stationNom) {
     }
 
   const texteOriginal = bouton.innerHTML;
-  bouton.innerHTML = 'Réservation...';
+  bouton.innerHTML = 'Location...';
   bouton.disabled = true;
 
-  fetch(`/api/stations/${stationId}/reserver/`, { method: 'POST' })
-    .then(response => {
-      if (!response.ok) throw new Error('Erreur réseau');
-      return response.json();
+  fetch(`/api/stations/${stationId}/louer/`, { method: 'POST' })
+    .then(reponse => {
+      if (!reponse.ok) throw new Error('Erreur réseau');
+      return reponse.json();
     })
     .then(() => {
-      alert(`Réservation confirmée à la station "${stationNom}".`);
+      alert(`Location confirmée à la station "${stationNom}".`);
       fermerModal();
 
       if (window.initialiserCarte) {
@@ -105,7 +105,7 @@ function confirmerLocation(stationId, stationNom) {
     })
     .catch(error => {
       console.error('Erreur :', error);
-      alert('Erreur lors de la réservation.');
+      alert('Erreur lors de la Location.');
       bouton.innerHTML = texteOriginal;
       bouton.disabled = false;
     });
