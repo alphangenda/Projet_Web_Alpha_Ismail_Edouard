@@ -98,8 +98,8 @@ function confirmerLocation(stationId, stationNom) {
       alert(`Location confirmée à la station "${stationNom}".`);
       fermerModal();
 
+
       if (window.initialiserCarte) {
-        document.getElementById('map').innerHTML = '';
         window.initialiserCarte();
       }
     })
