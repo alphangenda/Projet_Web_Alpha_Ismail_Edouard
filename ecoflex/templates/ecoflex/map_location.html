@@ -40,8 +40,8 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Carte interactive - EcoFlex</h2>
     <div class="col-md-3">
-        <label for="typeVehicule" class="form-label">Type d'abonnement</label>
-        <select class="form-select" id="typeVehicule">
+        <label for="typeAbonnement" class="form-label">Type d'abonnement</label>
+        <select class="form-select" id="typeAbonnement">
             <option value="occasionnelle">Occasionnelle</option>
             <option value="journalier">Journalier</option>
             <option value="mensuel">Mensuel</option>
@@ -157,72 +157,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var map = L.map('map').setView([46.8139, -71.2080], 13);
-
-        var abonnements = {
-            occasionnelle: {
-                nom: "Occasionnelle",
-                minutes: 30,
-                prix: minutes * 0.50 + "$"
-            },
-            journalier: {
-                nom: "Journalier",
-                minutes: 120,
-                prix: "15.00$"
-            },
-            mensuel: {
-                nom: "Mensuel",
-                minutes: 500,
-                prix: "Inclus dans l'abonnement mensuel"
-            },
-            annuel: {
-                nom: "Annuel",
-                minutes: 6000,
-                prix: "Inclus dans l'abonnement annuel"
-            }
-        };
-
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors & Carto'
-        }).addTo(map);
-
-        L.marker([46.8139, -71.2080])
-            .addTo(map)
-            .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
-            .openPopup();
-
-
-        fetch("/api/stations/")
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    var station = data[i];
-                    var marker = L.marker([station.latitude, station.longitude]).addTo(map);
-                    marker.bindPopup(
-                        "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
-
-                        + "<br>" + "Votre type d'abonnement : " + "<br>"
-                        + "<br>" + "Nombre de temps disponible : 30 minutes" + "<br>"
-                        + "<br>" + "Faire une location " + "<br>"
-                    );
-                }
-
-                //J'ai rajouter ça pour initialiser le filtre par pos après que les stations soit affichées
-                if (window.initialiserFiltre) {
-                    window.initialiserFiltre(map);
-                }
-            })
-            .catch(function (error) {
-                console.error("Erreur lors du chargement des stations :", error);
-            });
-    });
-</script>
+<script src="{% static 'ecoflex/js/carte.js' %}"></script>
 
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
 {% endblock %}
