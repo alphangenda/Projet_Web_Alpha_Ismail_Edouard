@@ -4,6 +4,9 @@ from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework import generics
 from .models import Station
 from .serializers import StationSerializerJson
@@ -126,3 +129,18 @@ def modifier_profil(request):
         form = ProfileForm(instance=request.user)
 
     return render(request, "ecoflex/modifier_profil.html", {"form": form})
+
+@csrf_exempt
+def louer_vehicule(request, station_id):
+    if request.method == "POST":
+        try:
+            station = Station.objects.get(pk=station_id)
+            if station.capacite > 0:
+                station.capacite -= 1
+                station.save()
+                return JsonResponse({'message': 'Réservation confirmée'})
+            else:
+                return JsonResponse({'message': 'Aucun véhicule disponible'}, status=400)
+        except Station.DoesNotExist:
+            return JsonResponse({'message': 'Station introuvable'}, status=404)
+    return JsonResponse({'message': 'Méthode non autorisée'}, status=405)
