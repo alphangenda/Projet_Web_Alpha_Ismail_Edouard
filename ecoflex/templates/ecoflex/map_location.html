@@ -31,7 +31,6 @@
         }
     }
 </style>
-<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 {% endblock %}
@@ -83,11 +82,6 @@
                     <button type="submit" class="btn btn-success w-100">Rechercher</button>
                 </div>
             </form>
-            <div class="mt-2">
-                <button id="utiliserMaPosition" class="btn btn-outline-success btn-sm">
-                    Utiliser ma position actuelle
-                </button>
-            </div>
         </div>
     </div>
 
@@ -140,7 +134,24 @@
 {% endblock %}
 
 {% block extra_js %}
+<<<<<<< HEAD
 <!-- Leaflet JS -->
+=======
+<script>
+    function toggleCarte() {
+        const widget = document.getElementById('carteMembreWidget');
+        widget.classList.toggle('expanded');
+    }
+
+    document.addEventListener('click', function (event) {
+        const widget = document.getElementById('carteMembreWidget');
+        if (widget.classList.contains('expanded') && !widget.contains(event.target)) {
+            widget.classList.remove('expanded');
+        }
+    });
+</script>
+
+>>>>>>> 52356e2b109aa8789d31b71c4edb61261f808fae
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -150,7 +161,38 @@
 
 <script src="{% static 'ecoflex/js/carte.js' %}"></script>
 
+<<<<<<< HEAD
 
+=======
+        var marqueurs = [];
 
+        fetch("/api/stations/")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var station = data[i];
+                    var marker = L.marker([station.latitude, station.longitude]).addTo(map);
+                    marker.bindPopup(
+                        "<b>" + station.nom + "</b><br>" + "Type : " + station.type_vehicule + "<br>" + "Capacité : " + station.capacite
+                    );
+                    marqueurs.push(marker);
+                }
+                if (window.initialiserFiltre) {
+                    window.initialiserFiltre(map);
+                }
+                if (window.sauvegarderMarqueursOriginaux) {
+                    window.sauvegarderMarqueursOriginaux(marqueurs);
+                }
+            })
+            .catch(function (error) {
+                console.error("Erreur lors du chargement des stations :", error);
+            });
+    });
+</script>
+>>>>>>> 52356e2b109aa8789d31b71c4edb61261f808fae
+
+<!-- Script de filtre par position -->
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
 {% endblock %}
