@@ -140,19 +140,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    function toggleCarte() {
-        const widget = document.getElementById('carteMembreWidget');
-        widget.classList.toggle('expanded');
-    }
-
-    document.addEventListener('click', function (event) {
-        const widget = document.getElementById('carteMembreWidget');
-        if (widget.classList.contains('expanded') && !widget.contains(event.target)) {
-            widget.classList.remove('expanded');
-        }
-    });
-</script>
+<script src="{% static 'ecoflex/js/carte_membre.js' %}"></script>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>

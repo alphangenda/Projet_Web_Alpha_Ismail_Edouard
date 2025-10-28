@@ -69,7 +69,7 @@ function initialiserCarte() {
         .openPopup();
 
     fetch("/api/stations/")
-        .then(response => response.json())
+        .then(reponse => reponse.json())
         .then(data => {
             const markers = [];
 
@@ -80,9 +80,9 @@ function initialiserCarte() {
             });
 
             // Mettre à jour popups selon abonnement choisit
-            const selectAbo = document.getElementById('typeAbonnement');
-            if (selectAbo) {
-                selectAbo.addEventListener('change', () => {
+            const choixAbonnement = document.getElementById('typeAbonnement');
+            if (choixAbonnement) {
+                choixAbonnement.addEventListener('change', () => {
                     markers.forEach(item => {
                         item.marker.setPopupContent(creerContenuPopup(item.station));
                     });
