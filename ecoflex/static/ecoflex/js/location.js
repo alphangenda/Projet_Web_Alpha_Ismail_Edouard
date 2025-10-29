@@ -104,19 +104,31 @@ function confirmerLocation(stationId, stationNom) {
             if (window.demarrerChronometre) {
                 window.demarrerChronometre();
             }
-            if (window.marqueursActuels) {
-                window.marqueursActuels.forEach(m => {
-                    if (m.getPopup()) {
-                        const station = m.options.stationData;
-                        m.setPopupContent(window.creerContenuPopup(station));
-                    }
-                });
-            }
 
+            return fetch('/api/stations/').then(r => {
+                if (!r.ok) throw new Error('Erreur réseau lors de la mise à jour des stations');
+                return r.json();
+            });
+
+        })
+        .then(stations => {
+            if (!window.marqueursActuels) return;
+
+            const byId = new window.Map(stations.map(s => [s.id, s]));
+
+            window.marqueursActuels.forEach(m => {
+                const station = m.options.stationData;
+                if (station && byId.has(station.id)) {
+                    m.options.stationData = byId.get(station.id);
+                    m.setPopupContent(window.creerContenuPopup(m.options.stationData));
+                }
+            });
         })
         .catch(error => {
             console.error('Erreur :', error);
             alert('Erreur lors de la Location.');
+        })
+        .finally(() => {
             bouton.innerHTML = texteOriginal;
             bouton.disabled = false;
         });

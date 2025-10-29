@@ -54,6 +54,7 @@ function creerContenuPopup(station) {
 
 function initialiserCarte() {
     const map = L.map('map').setView([46.8139, -71.2080], 13);
+    window.mapInstance = map;
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
@@ -72,8 +73,8 @@ function initialiserCarte() {
 
             data.forEach(station => {
                 const marker = L.marker([station.latitude, station.longitude]).addTo(map);
-                marker.bindPopup(creerContenuPopup(station));
                 marker.options.stationData = station;
+                marker.bindPopup(creerContenuPopup(station));
                 markers.push({ marker: marker, station: station });
             });
 
