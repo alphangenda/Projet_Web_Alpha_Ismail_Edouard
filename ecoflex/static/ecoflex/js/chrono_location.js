@@ -1,4 +1,13 @@
-document.addEventListener('DOMContentLoaded', function () {
+
+
+let tempsRestant = 30 * 60;
+let intervalID = null;
+
+function demarrerChronometre() {
+    if (document.getElementById('chronoContainer')) {
+        return;
+    }
+
     const chronoContainer = document.createElement('div');
     chronoContainer.id = 'chronoContainer';
     chronoContainer.style.position = 'fixed';
@@ -8,63 +17,56 @@ document.addEventListener('DOMContentLoaded', function () {
     chronoContainer.style.background = 'white';
     chronoContainer.style.border = '2px solid #28a745';
     chronoContainer.style.borderRadius = '12px';
-    chronoContainer.style.boxShadow = '0 4px 12px black';
+    chronoContainer.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
     chronoContainer.style.padding = '16px';
     chronoContainer.style.textAlign = 'center';
     chronoContainer.style.fontFamily = 'Arial, sans-serif';
+    chronoContainer.style.minWidth = '200px';
+
+    const titre = document.createElement('div');
+    titre.innerText = 'Location en cours';
+    titre.style.fontSize = '14px';
+    titre.style.fontWeight = 'bold';
+    titre.style.color = '#28a745';
+    titre.style.marginBottom = '8px';
 
     const chronoDisplay = document.createElement('div');
     chronoDisplay.id = 'chronoDisplay';
-    chronoDisplay.style.fontSize = '24px';
+    chronoDisplay.style.fontSize = '32px';
     chronoDisplay.style.fontWeight = 'bold';
     chronoDisplay.style.color = '#28a745';
     chronoDisplay.innerText = '00:30:00';
 
-    const startButton = document.createElement('button');
-    startButton.id = 'startChrono';
-    startButton.innerText = 'Démarrer la location';
-    startButton.style.background = '#28a745';
-    startButton.style.color = 'white';
-    startButton.style.border = 'none';
-    startButton.style.borderRadius = '8px';
-    startButton.style.padding = '10px 16px';
-    startButton.style.marginTop = '8px';
-    startButton.style.cursor = 'pointer';
-    startButton.style.transition = 'background 0.2s';
-    startButton.onmouseover = () => startButton.style.background = '#218838';
-    startButton.onmouseout = () => startButton.style.background = '#28a745';
-
+    chronoContainer.appendChild(titre);
     chronoContainer.appendChild(chronoDisplay);
-    chronoContainer.appendChild(startButton);
     document.body.appendChild(chronoContainer);
 
-    let tempsRestant = 30 * 60;
-    let intervalID = null;
-    let enCours = false;
+    intervalID = setInterval(() => {
+        if (tempsRestant > 0) {
+            tempsRestant--;
+            chronoDisplay.innerText = formatageTemps(tempsRestant);
 
-    function formatageTemps(seconds) {
-        const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-        const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-        const s = String(seconds % 60).padStart(2, '0');
-        return `${h}:${m}:${s}`;
-    }
-
-    function startChrono() {
-        if (enCours) return;
-        enCours = true;
-
-        intervalID = setInterval(() => {
-            if (tempsRestant > 0) {
-                tempsRestant--;
-                chronoDisplay.innerText = formatageTemps(tempsRestant);
-            } else {
-                clearInterval(intervalID);
-                chronoDisplay.innerText = 'Temps écoulé !';
-                chronoDisplay.style.color = 'red';
-                enCours = false;
+            const minutes = Math.floor(tempsRestant / 60);
+            if (tempsRestant <= 0) {
+                chronoDisplay.style.color = '#dc3545';
+                chronoContainer.style.borderColor = '#dc3545';
+            } else if (minutes < 5) {
+                chronoDisplay.style.color = '#ffc107';
+                chronoContainer.style.borderColor = '#ffc107';
             }
-        }, 1000);
-    }
+        } else {
+            clearInterval(intervalID);
+            chronoDisplay.innerText = 'Temps écoulé !';
+            chronoDisplay.style.color = '#dc3545';
+        }
+    }, 1000);
+}
 
-    startButton.addEventListener('click', startChrono);
-});
+function formatageTemps(seconds) {
+    const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+}
+
+window.demarrerChronometre = demarrerChronometre;
