@@ -1,4 +1,6 @@
+'use strict';
 
+window.locationActive = false;
 
 const abonnementsReservation = {
     occasionnelle: {
@@ -97,9 +99,20 @@ function confirmerLocation(stationId, stationNom) {
             alert(`Location confirmée à la station "${stationNom}".`);
             fermerModal();
 
+            window.locationActive = true;
+
             if (window.demarrerChronometre) {
                 window.demarrerChronometre();
             }
+            if (window.marqueursActuels) {
+                window.marqueursActuels.forEach(m => {
+                    if (m.getPopup()) {
+                        const station = m.options.stationData;
+                        m.setPopupContent(window.creerContenuPopup(station));
+                    }
+                });
+            }
+
         })
         .catch(error => {
             console.error('Erreur :', error);
@@ -108,6 +121,7 @@ function confirmerLocation(stationId, stationNom) {
             bouton.disabled = false;
         });
 }
+
 
 window.ouvrirModalLocation = ouvrirModalLocation;
 window.fermerModal = fermerModal;

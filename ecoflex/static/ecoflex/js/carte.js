@@ -1,3 +1,5 @@
+'use strict';
+
 /* global L */
 
 const abonnements = {
@@ -41,9 +43,12 @@ function creerContenuPopup(station) {
     contenu += `<br><br><strong>Votre abonnement</strong><br>
         Type : ${abonnement.nom}<br>
         Temps disponibles : ${abonnement.minutes}<br>
-        Prix : ${abonnement.prix}<br><br>
-        <button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')" class="btn btn-success w-100">Louer maintenant</button>`;
-
+        Prix : ${abonnement.prix}<br><br>`;
+        if (!window.locationActive) {
+            contenu += `<button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')" class="btn btn-success w-100">Louer maintenant</button>`;
+        } else {
+            contenu += `<div class="alert alert-warning text-center"> Une location est déjà en cours. </div>`;
+        }
     return contenu;
 }
 
@@ -68,8 +73,12 @@ function initialiserCarte() {
             data.forEach(station => {
                 const marker = L.marker([station.latitude, station.longitude]).addTo(map);
                 marker.bindPopup(creerContenuPopup(station));
+                marker.options.stationData = station;
                 markers.push({ marker: marker, station: station });
             });
+
+            window.marqueursActuels = markers.map(item => item.marker);
+
 
             const choixAbonnement = document.getElementById('typeAbonnement');
             if (choixAbonnement) {
@@ -93,7 +102,27 @@ function initialiserCarte() {
         });
 }
 
+function mettreAJourCarte(map) {
+    fetch('/api/stations/')
+        .then(reponse => reponse.json())
+        .then(data => {
+            if (window.marqueursActuels) {
+                window.marqueursActuels.forEach(m => map.removeLayer(m));
+            }
+
+            const nouveauxMarqueurs = data.map(station => {
+                const marker = L.marker([station.latitude, station.longitude]).addTo(map);
+                marker.bindPopup(creerContenuPopup(station));
+                return marker;
+            });
+
+            window.marqueursActuels = nouveauxMarqueurs;
+        })
+        .catch(error => console.error('Erreur carte :', error));
+}
+
 document.addEventListener('DOMContentLoaded', initialiserCarte);
 
 window.getTypeAbonnement = getTypeAbonnement;
 window.creerContenuPopup = creerContenuPopup;
+window.mettreAJourCarte = mettreAJourCarte;
