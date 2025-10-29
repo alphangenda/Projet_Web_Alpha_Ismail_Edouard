@@ -97,6 +97,7 @@
         <strong>Résultats :</strong> <span id="nombreResultats">0</span> véhicule(s) trouvé(s)
     </div>
 
+    {% if user.is_authenticated %}
     <div style="position: absolute; top: 80px; right: 20px; z-index: 1000; transition: all 0.3s;"
         id="carteMembreWidget">
         <div onclick="toggleCarte()"
@@ -132,6 +133,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div id="map" style="height: 600px; border-radius: 12px;"></div>
 
@@ -142,6 +144,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    window.utilisateurConnecte = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+</script>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>

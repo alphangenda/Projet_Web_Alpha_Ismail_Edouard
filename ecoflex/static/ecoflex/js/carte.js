@@ -40,15 +40,30 @@ function creerContenuPopup(station) {
         Type : ${station.type_vehicule}<br>
         Capacité : ${station.capacite}`;
 
-    contenu += `<br><br><strong>Votre abonnement</strong><br>
-        Type : ${abonnement.nom}<br>
-        Temps disponibles : ${abonnement.minutes}<br>
-        Prix : ${abonnement.prix}<br><br>`;
+
+    // ✅ Vérifie si l'utilisateur est connecté
+    if (window.utilisateurConnecte) {
+        contenu += `<br><br><strong>Votre abonnement</strong><br>
+            Type : ${abonnement.nom}<br>
+            Temps disponibles : ${abonnement.minutes}<br>
+            Prix : ${abonnement.prix}<br><br>`;
+
         if (!window.locationActive) {
-            contenu += `<button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')" class="btn btn-success w-100">Louer maintenant</button>`;
-        } else {
-            contenu += `<div class="alert alert-warning text-center"> Une location est déjà en cours. </div>`;
+            contenu += `<button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')"
+                class="btn btn-success w-100">Louer maintenant</button>`;
         }
+        else {
+            contenu += `<div class="alert alert-warning text-center">
+                Une location est déjà en cours.
+            </div>`;
+        }
+
+    } else {
+        contenu += `<div class="alert alert-info text-center mt-3">
+            Connectez-vous pour voir vos abonnements et louer un véhicule.<br>
+            <a href="/connexion/" class="btn btn-primary btn-sm mt-2 color:white">Se connecter</a>
+        </div>`;
+    }
     return contenu;
 }
 

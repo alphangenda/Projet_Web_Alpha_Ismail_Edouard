@@ -6,6 +6,9 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+import json
 
 from rest_framework import generics
 from .models import Station
@@ -131,19 +134,34 @@ def modifier_profil(request):
     return render(request, "ecoflex/modifier_profil.html", {"form": form})
 
 @csrf_exempt
+@require_POST
 def louer_vehicule(request, station_id):
-    if request.method == "POST":
-        try:
-            station = Station.objects.get(pk=station_id)
-            if station.capacite > 0:
-                station.capacite -= 1
-                station.save()
-                return JsonResponse({'message': 'Réservation confirmée'})
-            else:
-                return JsonResponse({'message': 'Aucun véhicule disponible'}, status=400)
-        except Station.DoesNotExist:
-            return JsonResponse({'message': 'Station introuvable'}, status=404)
-    return JsonResponse({'message': 'Méthode non autorisée'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentification requise.'}, status=401)
+
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        numero_permis_saisi = data.get('numero_permis')
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Requête invalide.'}, status=400)
+
+    if not numero_permis_saisi:
+        return JsonResponse({'error': 'Numéro de permis manquant.'}, status=400)
+
+    if str(numero_permis_saisi).strip() != str(request.user.numero_permis).strip():
+        return JsonResponse({'error': 'Numéro de permis invalide.'}, status=403)
+
+
+    station = Station.objects.get(pk=station_id, actif=True)
+
+    if station.capacite <= 0:
+        return JsonResponse({'error': 'Aucun véhicule disponible à cette station.'}, status=400)
+
+    station.capacite -= 1
+    station.save()
+
+    return JsonResponse({'message': f'Location confirmée à la station {station.nom}.'}, status=200)
 
 def annuler_location(request):
     if request.method == "POST":
