@@ -144,3 +144,11 @@ def louer_vehicule(request, station_id):
         except Station.DoesNotExist:
             return JsonResponse({'message': 'Station introuvable'}, status=404)
     return JsonResponse({'message': 'Méthode non autorisée'}, status=405)
+
+def annuler_location(request):
+    if request.method == "POST":
+        messages.success(request, "Location annulée avec succès.")
+        return redirect('map_location')
+    else:
+        messages.success(request, "Location annulée avec succès.")
+    return redirect('map_location')

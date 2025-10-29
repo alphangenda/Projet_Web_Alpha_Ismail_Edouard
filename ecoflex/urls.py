@@ -15,6 +15,7 @@ urlpatterns = [
     path('gestion_users/', views.gestion_users, name='gestion_users'),
     path('action_status/<int:user_id>/', views.action_status, name='action_status'),
     path('profil/modifier/', views.modifier_profil, name='modifier_profil'),
+    path('annuler_location/', views.annuler_location, name='annuler_location')
 
 
 
