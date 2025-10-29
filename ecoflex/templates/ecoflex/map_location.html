@@ -36,6 +36,16 @@
 {% endblock %}
 
 {% block content %}
+{% if messages %}
+  <div>
+      <div class="alert
+                  {% if message.tags == 'success' %}alert-success{% endif %}
+           role="alert">
+        {{ message }}
+      </div>
+  </div>
+{% endif %}
+
 <div class="container mt-4">
     <h2 class="text-center mb-4">Carte interactive - EcoFlex</h2>
     <div class="col-md-3">
@@ -144,7 +154,8 @@
 
 <script src="{% static 'ecoflex/js/carte.js' %}"></script>
 
-
+<script>const annulerLocationURL = "{% url 'annuler_location' %}";</script>
+<script src="{% static 'ecoflex/js/annuler_location.js' %}"></script>
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
 <script src="{% static 'ecoflex/js/chrono_location.js' %}"></script>
 {% endblock %}

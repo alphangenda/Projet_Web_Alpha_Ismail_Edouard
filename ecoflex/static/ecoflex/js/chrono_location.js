@@ -37,6 +37,20 @@ function demarrerChronometre() {
     chronoDisplay.style.color = '#28a745';
     chronoDisplay.innerText = '00:30:00';
 
+    const boutonAnnuler = document.createElement('button');
+    boutonAnnuler.innerText = 'Annuler la location';
+    boutonAnnuler.style.marginTop = '12px';
+    boutonAnnuler.style.backgroundColor = '#dc3545';
+    boutonAnnuler.style.color = 'white';
+    boutonAnnuler.style.border = 'none';
+    boutonAnnuler.style.padding = '8px 12px';
+    boutonAnnuler.style.borderRadius = '6px';
+    boutonAnnuler.style.cursor = 'pointer';
+    boutonAnnuler.style.fontSize = '13px';
+    boutonAnnuler.style.fontWeight = 'bold';
+
+    boutonAnnuler.addEventListener('click', annulerLocation);
+
     chronoContainer.appendChild(titre);
     chronoContainer.appendChild(chronoDisplay);
     document.body.appendChild(chronoContainer);
@@ -68,5 +82,12 @@ function formatageTemps(seconds) {
     const s = String(seconds % 60).padStart(2, '0');
     return `${h}:${m}:${s}`;
 }
+
+function annulerLocation() {
+    if (confirm("Voulez-vous vraiment annuler la location ?")) {
+        window.location.href = annulerLocationURL; // redirige vers ta vue Django
+    }
+}
+
 
 window.demarrerChronometre = demarrerChronometre;
