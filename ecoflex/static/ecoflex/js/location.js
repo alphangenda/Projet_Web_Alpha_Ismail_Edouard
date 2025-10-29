@@ -1,26 +1,25 @@
-'use strict';
 
-// Définition des abonnements pour la réservation
+
 const abonnementsReservation = {
     occasionnelle: {
-        nom: "Occasionnelle",
+        nom: 'Occasionnelle',
         minutes: 0,
-        prix: "0.50$ par minute"
+        prix: '0.50$ par minute'
     },
     journalier: {
-        nom: "Journalier",
+        nom: 'Journalier',
         minutes: 1440,
-        prix: "15.00$"
+        prix: '15.00$'
     },
     mensuel: {
-        nom: "Mensuel",
+        nom: 'Mensuel',
         minutes: 30,
-        prix: "Inclus"
+        prix: 'Inclus'
     },
     annuel: {
-        nom: "Annuel",
+        nom: 'Annuel',
         minutes: 30,
-        prix: "Inclus"
+        prix: 'Inclus'
     }
 };
 
@@ -28,7 +27,7 @@ function ouvrirModalLocation(stationId, stationNom, typeVehicule) {
     const typeAbo = window.getTypeAbonnement ? window.getTypeAbonnement() : 'occasionnelle';
     const abonnement = abonnementsReservation[typeAbo];
 
-    const nomSecurise = stationNom.replace(/'/g, "\\'").replace(/"/g, '\\"');
+    const nomSecurise = stationNom.replace(/'/g, '\\\'').replace(/"/g, '\\"');
 
     const modalHTML = `
         <div class="modal fade show d-block" id="modalLocation" tabindex="-1" style="background: rgba(0,0,0,0.6);">
@@ -78,37 +77,36 @@ function fermerModal() {
 }
 
 function confirmerLocation(stationId, stationNom) {
-  const bouton = document.querySelector('#modalLocation .btn-success');
+    const bouton = document.querySelector('#modalLocation .btn-success');
 
-  if (!bouton) {
+    if (!bouton) {
         console.error('Bouton de confirmation introuvable');
         return;
     }
 
-  const texteOriginal = bouton.innerHTML;
-  bouton.innerHTML = 'Location...';
-  bouton.disabled = true;
+    const texteOriginal = bouton.innerHTML;
+    bouton.innerHTML = 'Location...';
+    bouton.disabled = true;
 
-  fetch(`/api/stations/${stationId}/louer/`, { method: 'POST' })
-    .then(reponse => {
-      if (!reponse.ok) throw new Error('Erreur réseau');
-      return reponse.json();
-    })
-    .then(() => {
-      alert(`Location confirmée à la station "${stationNom}".`);
-      fermerModal();
+    fetch(`/api/stations/${stationId}/louer/`, { method: 'POST' })
+        .then(reponse => {
+            if (!reponse.ok) throw new Error('Erreur réseau');
+            return reponse.json();
+        })
+        .then(() => {
+            alert(`Location confirmée à la station "${stationNom}".`);
+            fermerModal();
 
-
-      if (window.initialiserCarte) {
-        window.initialiserCarte();
-      }
-    })
-    .catch(error => {
-      console.error('Erreur :', error);
-      alert('Erreur lors de la Location.');
-      bouton.innerHTML = texteOriginal;
-      bouton.disabled = false;
-    });
+            if (window.demarrerChronometre) {
+                window.demarrerChronometre();
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+            alert('Erreur lors de la Location.');
+            bouton.innerHTML = texteOriginal;
+            bouton.disabled = false;
+        });
 }
 
 window.ouvrirModalLocation = ouvrirModalLocation;

@@ -1,42 +1,38 @@
 /* global L */
-'use strict';
 
-// Types d'abonnements
 const abonnements = {
     occasionnelle: {
-        nom: "Occasionnelle",
-        minutes: "Indéterminé",
-        prix: "0.50$ par minute"
+        nom: 'Occasionnelle',
+        minutes: 'Indéterminé',
+        prix: '0.50$ par minute'
     },
     journalier: {
-        nom: "Journalier",
-        minutes: "24 heures",
-        prix: "15.00$"
+        nom: 'Journalier',
+        minutes: '24 heures',
+        prix: '15.00$'
     },
     mensuel: {
-        nom: "Mensuel",
-        minutes: "30 minutes",
-        prix: "Inclus dans l'abonnement mensuel"
+        nom: 'Mensuel',
+        minutes: '30 minutes',
+        prix: 'Inclus dans l\'abonnement mensuel'
     },
     annuel: {
-        nom: "Annuel",
-        minutes: "30 minutes",
-        prix: "Inclus dans l'abonnement annuel"
+        nom: 'Annuel',
+        minutes: '30 minutes',
+        prix: 'Inclus dans l\'abonnement annuel'
     }
 };
 
-// Obtenir type d'abonnement choisit
 function getTypeAbonnement() {
     const select = document.getElementById('typeAbonnement');
     return select ? select.value : 'occasionnelle';
 }
 
-// Contenu du popup
 function creerContenuPopup(station) {
     const typeAbonnement = getTypeAbonnement();
     const abonnement = abonnements[typeAbonnement];
 
-    const nomSecurise = station.nom.split("'").join("\\'");
+    const nomSecurise = station.nom.split('\'').join('\\\'');
 
     let contenu = `<b>${station.nom}</b><br>
         Type : ${station.type_vehicule}<br>
@@ -51,7 +47,6 @@ function creerContenuPopup(station) {
     return contenu;
 }
 
-// Fonction pour initialiser carte
 function initialiserCarte() {
     const map = L.map('map').setView([46.8139, -71.2080], 13);
 
@@ -62,10 +57,10 @@ function initialiserCarte() {
 
     L.marker([46.8139, -71.2080])
         .addTo(map)
-        .bindPopup("<b>EcoFlex Québec</b><br>Centre-ville de Québec.")
+        .bindPopup('<b>EcoFlex Québec</b><br>Centre-ville de Québec.')
         .openPopup();
 
-    fetch("/api/stations/")
+    fetch('/api/stations/')
         .then(reponse => reponse.json())
         .then(data => {
             const markers = [];
@@ -76,7 +71,6 @@ function initialiserCarte() {
                 markers.push({ marker: marker, station: station });
             });
 
-            // Mettre à jour popups selon abonnement choisit
             const choixAbonnement = document.getElementById('typeAbonnement');
             if (choixAbonnement) {
                 choixAbonnement.addEventListener('change', () => {
@@ -95,11 +89,11 @@ function initialiserCarte() {
             }
         })
         .catch(error => {
-            console.error("Erreur lors du chargement des stations :", error);
+            console.error('Erreur lors du chargement des stations :', error);
         });
 }
 
-document.addEventListener("DOMContentLoaded", initialiserCarte);
+document.addEventListener('DOMContentLoaded', initialiserCarte);
 
 window.getTypeAbonnement = getTypeAbonnement;
 window.creerContenuPopup = creerContenuPopup;
