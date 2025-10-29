@@ -41,7 +41,6 @@ function creerContenuPopup(station) {
         Capacité : ${station.capacite}`;
 
 
-    // ✅ Vérifie si l'utilisateur est connecté
     if (window.utilisateurConnecte) {
         contenu += `<br><br><strong>Votre abonnement</strong><br>
             Type : ${abonnement.nom}<br>
