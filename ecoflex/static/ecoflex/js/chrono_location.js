@@ -84,8 +84,8 @@ function formatageTemps(seconds) {
 }
 
 function annulerLocation() {
-    if (confirm("Voulez-vous vraiment annuler la location ?")) {
-        window.location.href = annulerLocationURL; // redirige vers ta vue Django
+    if (confirm('Voulez-vous vraiment annuler la location ?')) {
+        window.location.href = annulerLocationURL;
     }
 }
 
