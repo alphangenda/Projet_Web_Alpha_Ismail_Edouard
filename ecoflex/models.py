@@ -1,7 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import random
 
 class User(AbstractUser):
+
+    numero_permis = models.CharField(max_length=5, unique=True, blank=True, null=True)
 
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
@@ -13,6 +16,19 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Utilisateur"
         verbose_name_plural = "Utilisateurs"
+
+    def save(self, *args, **kwargs):
+        """Génère un numéro de permis unique à 5 chiffres si non défini."""
+        if not self.numero_permis:
+            self.numero_permis = self._generer_code_unique()
+        super().save(*args, **kwargs)
+
+    def _generer_code_unique(self):
+        """Retourne un code unique à 5 chiffres non utilisé par un autre utilisateur."""
+        while True:
+            code = str(random.randint(10000, 99999))
+            if not User.objects.filter(numero_permis=code).exists():
+                return code
 
     def __str__(self):
         if self.first_name and self.last_name:
@@ -42,5 +58,3 @@ class Station(models.Model):
 
     def __str__(self):
         return f"{self.nom} ({self.type_vehicule})"
-
-

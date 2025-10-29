@@ -53,6 +53,12 @@ function ouvrirModalLocation(stationId, stationNom, typeVehicule) {
                     <p class="mb-0"><strong>Tarif :</strong> ${abonnement.prix}</p>
                     </div>
 
+                    <div class="mt-3">
+                        <label for="numeroPermisInput" class="form-label fw-bold">Numéro de permis</label>
+                        <input type="text" id="numeroPermisInput" class="form-control" maxlength="5" placeholder="Entrez votre numéro à 5 chiffres">
+                        <div class="invalid-feedback">Veuillez entrer votre numéro de permis.</div>
+                    </div>
+
                     <div class="alert alert-secondary">
                     <small>Cette réservation sera calculée automatiquement selon les conditions de votre abonnement.</small>
                     </div>
@@ -80,23 +86,37 @@ function fermerModal() {
 
 function confirmerLocation(stationId, stationNom) {
     const bouton = document.querySelector('#modalLocation .btn-success');
+    const inputPermis = document.getElementById('numeroPermisInput');
 
-    if (!bouton) {
-        console.error('Bouton de confirmation introuvable');
+    if (!bouton || !inputPermis) {
+        console.error('Éléments de confirmation introuvables.');
         return;
     }
+
+    const numeroPermis = inputPermis.value.trim();
+
+    if (!numeroPermis) {
+        inputPermis.classList.add('is-invalid');
+        return;
+    }
+
+    inputPermis.classList.remove('is-invalid');
 
     const texteOriginal = bouton.innerHTML;
     bouton.innerHTML = 'Location...';
     bouton.disabled = true;
 
-    fetch(`/api/stations/${stationId}/louer/`, { method: 'POST' })
-        .then(reponse => {
-            if (!reponse.ok) throw new Error('Erreur réseau');
-            return reponse.json();
+    fetch(`/api/stations/${stationId}/louer/`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ numero_permis: numeroPermis }) })
+        .then(async (reponse) => {
+            const data = await reponse.json();
+            if (!reponse.ok) {
+                alert(data.error || 'Erreur lors de la réservation.');
+                throw new Error(data.error || 'Erreur serveur');
+            }
+            return data;
         })
-        .then(() => {
-            alert(`Location confirmée à la station "${stationNom}".`);
+        .then((data) => {
+            alert(data.message || `Location confirmée à la station "${stationNom}".`);
             fermerModal();
 
             window.locationActive = true;
@@ -104,19 +124,27 @@ function confirmerLocation(stationId, stationNom) {
             if (window.demarrerChronometre) {
                 window.demarrerChronometre();
             }
-            if (window.marqueursActuels) {
-                window.marqueursActuels.forEach(m => {
-                    if (m.getPopup()) {
-                        const station = m.options.stationData;
-                        m.setPopupContent(window.creerContenuPopup(station));
-                    }
-                });
-            }
 
+            return fetch('/api/stations/').then(r => r.json());
+        })
+        .then(stations => {
+            if (!window.marqueursActuels) return;
+
+            const byId = new window.Map(stations.map(s => [s.id, s]));
+
+            window.marqueursActuels.forEach(m => {
+                const station = m.options.stationData;
+                if (station && byId.has(station.id)) {
+                    m.options.stationData = byId.get(station.id);
+                    m.setPopupContent(window.creerContenuPopup(m.options.stationData));
+                }
+            });
         })
         .catch(error => {
             console.error('Erreur :', error);
             alert('Erreur lors de la Location.');
+        })
+        .finally(() => {
             bouton.innerHTML = texteOriginal;
             bouton.disabled = false;
         });
