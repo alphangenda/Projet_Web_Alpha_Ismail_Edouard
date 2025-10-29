@@ -1,4 +1,28 @@
 /* global L */
+'use strict';
+
+const abonnements = {
+    occasionnelle: {
+        nom: 'Occasionnelle',
+        minutes: 'Indéterminé',
+        prix: '0.50$ par minute'
+    },
+    journalier: {
+        nom: 'Journalier',
+        minutes: '24 heures',
+        prix: '15.00$'
+    },
+    mensuel: {
+        nom: 'Mensuel',
+        minutes: '30 minutes',
+        prix: 'Inclus dans l\'abonnement mensuel'
+    },
+    annuel: {
+        nom: 'Annuel',
+        minutes: '30 minutes',
+        prix: 'Inclus dans l\'abonnement annuel'
+    }
+};
 
 let cartePrincipale;
 let toutesLesStations = [];
@@ -87,14 +111,27 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
         return a.distance - b.distance;
     });
 
+    const typeAbonnement = window.getTypeAbonnement();
+    const abonnement = abonnements[typeAbonnement];
+
     stationsFiltrees.forEach(function(station) {
-        let marqueur = L.marker([station.latitude, station.longitude]).addTo(cartePrincipale);
-        marqueur.bindPopup(
-            '<b>' + station.nom + '</b><br>' +
-            'Type: ' + station.type_vehicule + '<br>' +
-            'Capacité: ' + station.capacite + '<br>' +
-            'Distance: ' + station.distance.toFixed(2) + ' km'
-        );
+        const marqueur = L.marker([station.latitude, station.longitude]).addTo(cartePrincipale);
+
+        marqueur.bindPopup(`
+            <b>${station.nom}</b><br>
+            Type: ${station.type_vehicule}<br>
+            Capacité: ${station.capacite}<br>
+            Distance: ${station.distance.toFixed(2)} km
+            <br><br><strong>Votre abonnement</strong><br>
+            Type : ${abonnement.nom}<br>
+            Temps disponibles : ${abonnement.minutes}<br>
+            Prix : ${abonnement.prix}<br><br>
+            <button onclick="ouvrirModalLocation(${station.id}, '${station.nom.replace(/'/g, "\\'")}', '${station.type_vehicule}')"
+                class="btn btn-success w-100">
+                Louer maintenant
+            </button>
+        `);
+
         marqueurs.push(marqueur);
     });
 

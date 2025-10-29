@@ -1,4 +1,4 @@
-
+'use strict';
 
 let tempsRestant = 30 * 60;
 let intervalID = null;
