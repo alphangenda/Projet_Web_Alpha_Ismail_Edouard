@@ -31,6 +31,9 @@ def tarif(request):
 def fonctionnement(request):
     return render(request, 'ecoflex/fonctionnement.html')
 
+def tarif(request):
+    return render(request, 'ecoflex/tarif.html')
+
 def map_location(request):
     return render(request, 'ecoflex/map_location.html')
 
