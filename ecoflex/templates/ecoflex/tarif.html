@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Tarif - EcoFlex{% endblock %}
+
+{% block content %}
+<div class="container mt-5 gap-0">
+    <h1>Tarif - EcoFlex</h1>
+    <div>
+        <section class="servicesVelo">
+            <div class="card">
+                <h3>Occasionnel & Journalier</h3>
+                <ul>
+                    <li><strong>Occasionnel :</strong> 1,00 $ de déverrouillage + 0,33 $ / minute</li>
+                    <li><strong>Journalier :</strong> 19,00 $ pour 24 heures</li>
+                    <li>Trajets illimités de 45 minutes</li>
+                    <li>+ 0,33 $ / minute après 45 minutes</li>
+                    <li>Dépôt remboursable de 100 $ par vélo</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">Choisir ce forfait →</button>
+            </div>
+
+            <div class="card cardMiddleVelo">
+                <h3>Abonnement Mensuel</h3>
+                <ul>
+                    <li><strong>30 minutes :</strong> 36,00 $ par mois</li>
+                    <li>Trajets illimités de 30 minutes</li>
+                    <li>+ 0,25 $ / minute après 30 minutes</li>
+                    <li>Déverrouillage gratuit</li>
+                    <li>Aucun dépôt requis</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">S’abonner →</button>
+            </div>
+
+            <div class="card">
+                <h3>Abonnement Annuel</h3>
+                <ul>
+                    <li><strong>30 minutes :</strong> 139,00 $ par an</li>
+                    <li>Trajets illimités de 30 minutes</li>
+                    <li>+ 0,25 $ / minute après 30 minutes</li>
+                    <li>Déverrouillage gratuit</li>
+                    <li>Valide 365 jours consécutifs</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">S’abonner →</button>
+            </div>
+        </section>
+        <section class="servicesTrotinette">
+            <div class="card">
+                <h3>Occasionnel & Journalier</h3>
+                <ul>
+                    <li><strong>Occasionnel :</strong> 1,25 $ de déverrouillage + 0,39 $ / minute</li>
+                    <li><strong>Journalier :</strong> 22,00 $ pour 24 heures</li>
+                    <li>Trajets illimités de 30 minutes</li>
+                    <li>+ 0,39 $ / minute après 30 minutes</li>
+                    <li>Dépôt remboursable de 100 $ par trottinette</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">Choisir ce forfait →</button>
+            </div>
+
+            <div class="card cardMiddleTrotinette">
+                <h3>Abonnement Mensuel</h3>
+                <ul>
+                    <li><strong>30 minutes :</strong> 45,00 $ par mois</li>
+                    <li>Trajets illimités de 30 minutes</li>
+                    <li>+ 0,30 $ / minute après 30 minutes</li>
+                    <li>Déverrouillage gratuit</li>
+                    <li>Aucun dépôt requis</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">S’abonner →</button>
+            </div>
+
+            <div class="card">
+                <h3>Abonnement Annuel</h3>
+                <ul>
+                    <li><strong>30 minutes :</strong> 169,00 $ par an</li>
+                    <li>Trajets illimités de 30 minutes</li>
+                    <li>+ 0,30 $ / minute après 30 minutes</li>
+                    <li>Déverrouillage gratuit</li>
+                    <li>Valide 365 jours consécutifs</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">S’abonner →</button>
+            </div>
+        </section>
+        <section class="servicesVoiture">
+            <div class="card">
+                <h3>Occasionnel & Journalier</h3>
+                <ul>
+                    <li><strong>Occasionnel :</strong> 14,00 $ / heure</li>
+                    <li><strong>Journalier :</strong> 60,00 $ / jour</li>
+                    <li>Recharge incluse sur les bornes partenaires</li>
+                    <li>Assurance de base incluse</li>
+                    <li>Limite de 200 km par jour (0,30 $ / km supplémentaire)</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">Choisir ce forfait →</button>
+            </div>
+
+            <div class="card cardMiddleVoiture">
+                <h3>Abonnement Mensuel</h3>
+                <ul>
+                    <li><strong>Prix :</strong> 9,50 $ / heure</li>
+                    <li>Trajets illimités selon disponibilité</li>
+                    <li>Recharge et assurance incluses</li>
+                    <li>Limite de 250 km par jour (0,25 $ / km supplémentaire)</li>
+                    <li>Aucun frais de réservation</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">S’abonner →</button>
+            </div>
+
+            <div class="card">
+                <h3>Abonnement Annuel</h3>
+                <ul>
+                    <li><strong>Prix :</strong> 7,50 $ / heure</li>
+                    <li>Trajets illimités selon disponibilité</li>
+                    <li>Recharge et assurance incluses</li>
+                    <li>Limite de 300 km par jour (0,20 $ / km supplémentaire)</li>
+                    <li>Réservations prioritaires et service premium</li>
+                    <li>Taxes incluses</li>
+                </ul>
+                <button class="btn-order">S’abonner →</button>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<style>
+    .servicesVelo,
+    .servicesTrotinette,
+    .servicesVoiture {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        justify-items: center;
+        align-items: start;
+        margin-top: 2rem;
+        margin-bottom: 10rem;
+    }
+
+    .card {
+        background: #f9f9f9;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 380px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cardMiddleVelo {
+        margin-top: 15rem;
+    }
+
+    .cardMiddleTrotinette {
+        margin-top: 15rem;
+    }
+
+    .cardMiddleVoiture {
+        margin-top: 15rem;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #222;
+    }
+
+    .card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.5rem 0;
+    }
+
+    .card li {
+        margin-bottom: 0.5rem;
+        color: #444;
+        line-height: 1.5;
+    }
+
+    .btn-order {
+        background: #1c2939;
+        color: #fff;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+    }
+
+    .btn-order:hover {
+        background: #2a3b54;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}

@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.accueil, name='accueil'),
     path('tarif/', views.tarif, name='tarif'),
     path('fonctionnement/', views.fonctionnement, name='fonctionnement'),
+    path('tarif/', views.tarif, name='tarif'),
     path('map_location/', views.map_location, name='map_location'),
     path('api/stations/<int:station_id>/louer/', views.louer_vehicule, name='louer_vehicule'),
     path('api/stations/', views.StationListAPIView.as_view(), name='station-list'),
