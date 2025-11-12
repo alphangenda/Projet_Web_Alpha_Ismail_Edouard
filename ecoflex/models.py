@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import random
+from django.conf import settings
 
 class User(AbstractUser):
 
@@ -58,3 +59,26 @@ class Station(models.Model):
 
     def __str__(self):
         return f"{self.nom} ({self.type_vehicule})"
+
+class Reservation(models.Model):
+    STATUT_CHOICES = [
+        ('active', 'Active'),
+        ('annulee', 'Annulée'),
+        ('terminee', 'Terminée'),
+    ]
+
+    utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reservations')
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='reservations')
+    date_reservation = models.DateField()
+    heure_debut = models.TimeField()
+    heure_fin = models.TimeField()
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='active')
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_reservation', '-heure_debut']
+        verbose_name = 'Réservation'
+        verbose_name_plural = 'Réservations'
+
+    def __str__(self):
+        return f"{self.utilisateur.username} - {self.station.nom} - {self.date_reservation}"
