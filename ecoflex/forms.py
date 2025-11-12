@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User
+from .models import User, Station
+from datetime import date
 
 User = get_user_model()
 
@@ -115,3 +116,81 @@ class ProfileForm(forms.ModelForm):
             'postal_code': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre code postal'
             }),
         }
+
+class ReservationForm(forms.Form):
+    station = forms.ModelChoiceField(
+        queryset=Station.objects.filter(actif=True, type_vehicule="voiture", capacite__gt=0).order_by('nom'),
+        label="Station",
+        empty_label="Sélectionnez une station",
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        error_messages={
+            'required': 'Veuillez sélectionner une station.',
+            'invalid_choice': 'Station invalide.'
+        }
+    )
+
+    date_reservation = forms.DateField(
+        label="Date de réservation",
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        error_messages={
+            'required': 'Veuillez sélectionner une date.',
+            'invalid': 'Date invalide.'
+        }
+    )
+
+    heure_debut = forms.TimeField(
+        label="Heure de début",
+        widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+        error_messages={
+            'required': 'Veuillez sélectionner une heure de début.',
+            'invalid': 'Heure invalide.'
+        }
+    )
+
+    heure_fin = forms.TimeField(
+        label="Heure de fin",
+        widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+        error_messages={
+            'required': 'Veuillez sélectionner une heure de fin.',
+            'invalid': 'Heure invalide.'
+        }
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        date_reservation = cleaned_data.get('date_reservation')
+        heure_debut = cleaned_data.get('heure_debut')
+        heure_fin = cleaned_data.get('heure_fin')
+
+        if date_reservation and date_reservation < date.today():
+            raise forms.ValidationError("La date de réservation ne peut pas être dans le passé.")
+
+        if heure_debut and heure_fin and heure_fin <= heure_debut:
+            raise forms.ValidationError("L'heure de fin doit être après l'heure de début.")
+
+        return cleaned_data
+
+from datetime import date
+
+class AnnulationReservationForm(forms.Form):
+    reservation = forms.ModelChoiceField(
+        queryset=None,
+        label="Réservation à annuler",
+        empty_label="Sélectionnez une réservation",
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        error_messages={
+            'required': 'Veuillez sélectionner une réservation à annuler.',
+            'invalid_choice': 'Réservation invalide.'
+        }
+    )
+
+    def __init__(self, user=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user:
+            from .models import Reservation
+            self.fields['reservation'].queryset = Reservation.objects.filter(
+                utilisateur=user,
+                statut='active',
+                date_reservation__gte=date.today()
+            ).select_related('station')
+            self.fields['reservation'].label_from_instance = lambda obj: f"{obj.station.nom} - {obj.date_reservation} ({obj.heure_debut.strftime('%H:%M')} - {obj.heure_fin.strftime('%H:%M')})"
