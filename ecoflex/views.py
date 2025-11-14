@@ -26,13 +26,15 @@ def placeholder_view(request):
     )
 
 def tarif(request):
-    return placeholder_view(request)
+    return render(request, 'ecoflex/tarif.html')
+
+
+def abonnement(request):
+    return render(request, 'ecoflex/tarif.html')
 
 def fonctionnement(request):
     return render(request, 'ecoflex/fonctionnement.html')
 
-def tarif(request):
-    return render(request, 'ecoflex/tarif.html')
 
 def map_location(request):
     return render(request, 'ecoflex/map_location.html')
