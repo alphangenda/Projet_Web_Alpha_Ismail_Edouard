@@ -149,7 +149,6 @@
 <script>
     window.utilisateurConnecte = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
 </script>
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -160,7 +159,7 @@
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
 
 <script>const annulerLocationURL = "{% url 'annuler_location' %}";</script>
-<script src="{% static 'ecoflex/js/annuler_location.js' %}"></script>
+<script src="{% static 'ecoflex/js/annuler_location_v2.js' %}"></script>
 
 
 {% endblock %}
