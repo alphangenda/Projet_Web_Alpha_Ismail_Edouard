@@ -82,3 +82,26 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"{self.utilisateur.username} - {self.station.nom} - {self.date_reservation}"
+
+class Location(models.Model):
+    utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='locations')
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='locations')
+    date_location = models.DateTimeField(auto_now_add=True)
+    date_retour = models.DateTimeField(null=True, blank=True)
+    numero_permis_utilise = models.CharField(max_length=5)
+    statut = models.CharField(
+        max_length=20,
+        choices=[
+            ('en_cours', 'En cours'),
+            ('terminee', 'Terminée'),
+        ],
+        default='en_cours'
+    )
+
+    class Meta:
+        ordering = ['-date_location']
+        verbose_name = 'Location'
+        verbose_name_plural = 'Locations'
+
+    def __str__(self):
+        return f"{self.utilisateur.username} - {self.station.nom} - {self.date_location.strftime('%Y-%m-%d %H:%M')}"
