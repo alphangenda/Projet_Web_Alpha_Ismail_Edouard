@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm
+from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm, ReservationForm, AnnulationReservationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
@@ -11,7 +11,7 @@ from django.http import JsonResponse
 import json
 
 from rest_framework import generics
-from .models import Station
+from .models import Station, Reservation
 from .serializers import StationSerializerJson
 
 User = get_user_model()
@@ -30,6 +30,9 @@ def tarif(request):
 
 def fonctionnement(request):
     return render(request, 'ecoflex/fonctionnement.html')
+
+def tarif(request):
+    return render(request, 'ecoflex/tarif.html')
 
 def map_location(request):
     return render(request, 'ecoflex/map_location.html')
@@ -170,3 +173,40 @@ def annuler_location(request):
     else:
         messages.success(request, "Location annulée avec succès.")
     return redirect('map_location')
+
+def reserver_voiture(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "Vous devez être connecté pour réserver une voiture.")
+        return redirect('connexion')
+
+    reservation_form = ReservationForm()
+    annulation_form = AnnulationReservationForm(user=request.user)
+
+    if request.method == 'POST':
+        if 'reserver' in request.POST:
+            reservation_form = ReservationForm(request.POST)
+            if reservation_form.is_valid():
+                Reservation.objects.create(
+                    utilisateur=request.user,
+                    station=reservation_form.cleaned_data['station'],
+                    date_reservation=reservation_form.cleaned_data['date_reservation'],
+                    heure_debut=reservation_form.cleaned_data['heure_debut'],
+                    heure_fin=reservation_form.cleaned_data['heure_fin'],
+                    statut='active'
+                )
+                messages.success(request, "Réservation confirmée avec succès!")
+                return redirect('map_location')
+
+        elif 'annuler' in request.POST:
+            annulation_form = AnnulationReservationForm(user=request.user, data=request.POST)
+            if annulation_form.is_valid():
+                reservation = annulation_form.cleaned_data['reservation']
+                reservation.statut = 'annulee'
+                reservation.save()
+                messages.success(request, "Réservation annulée avec succès!")
+                return redirect('map_location')
+
+    return render(request, 'ecoflex/reservations.html', {
+        'reservation_form': reservation_form,
+        'annulation_form': annulation_form
+    })

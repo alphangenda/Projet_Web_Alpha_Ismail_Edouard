@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}Réserver une voiture - EcoFlex{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center g-4">
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0 rounded-4 p-4">
+                    <h2 class="text-center mb-4 text-success">
+                        <i class="bi bi-car-front"></i> Réserver une voiture
+                    </h2>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if reservation_form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {% for error in reservation_form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            {{ reservation_form.station.label_tag }}<span style="color: red">*</span>
+                            {{ reservation_form.station }}
+                            {% if reservation_form.station.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in reservation_form.station.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ reservation_form.date_reservation.label_tag }}<span style="color: red">*</span>
+                            {{ reservation_form.date_reservation }}
+                            {% if reservation_form.date_reservation.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in reservation_form.date_reservation.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ reservation_form.heure_debut.label_tag }}<span style="color: red">*</span>
+                            {{ reservation_form.heure_debut }}
+                            {% if reservation_form.heure_debut.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in reservation_form.heure_debut.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ reservation_form.heure_fin.label_tag }}<span style="color: red">*</span>
+                            {{ reservation_form.heure_fin }}
+                            {% if reservation_form.heure_fin.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in reservation_form.heure_fin.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="reserver" class="btn btn-success btn-lg rounded-pill shadow-sm">
+                                <i class="bi bi-check-circle"></i> Confirmer la réservation
+                            </button>
+                            <a href="{% url 'map_location' %}" class="btn btn-secondary rounded-pill">
+                                <i class="bi bi-x-circle"></i> Retour à la carte
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0 rounded-4 p-4">
+                    <h2 class="text-center mb-4 text-danger">
+                        <i class="bi bi-x-octagon"></i> Annuler une réservation
+                    </h2>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if annulation_form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {% for error in annulation_form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if annulation_form.reservation.field.queryset.count > 0 %}
+                            <div class="mb-3">
+                                {{ annulation_form.reservation.label_tag }}<span style="color: red">*</span>
+                                {{ annulation_form.reservation }}
+                                {% if annulation_form.reservation.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in annulation_form.reservation.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="alert alert-warning" role="alert">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <strong>Attention :</strong> L'annulation de votre réservation est définitive.
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" name="annuler" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                                    <i class="bi bi-trash"></i> Confirmer l'annulation
+                                </button>
+                                <a href="{% url 'map_location' %}" class="btn btn-secondary rounded-pill">
+                                    <i class="bi bi-x-circle"></i> Retour à la carte
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info text-center" role="alert">
+                                <i class="bi bi-info-circle"></i> Vous n'avez aucune réservation active à annuler.
+                            </div>
+                            <div class="d-grid">
+                                <a href="{% url 'map_location' %}" class="btn btn-secondary rounded-pill">
+                                    <i class="bi bi-arrow-left"></i> Retour à la carte
+                                </a>
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
