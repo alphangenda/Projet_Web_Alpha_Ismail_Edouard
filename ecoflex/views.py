@@ -4,6 +4,7 @@ from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm, Reservat
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
+from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -11,7 +12,7 @@ from django.http import JsonResponse
 import json
 
 from rest_framework import generics
-from .models import Station, Reservation, Location
+from .models import Station, Reservation, Location, Location
 from .serializers import StationSerializerJson
 
 User = get_user_model()
@@ -146,7 +147,6 @@ def modifier_profil(request):
 @csrf_exempt
 @require_POST
 def louer_vehicule(request, station_id):
-
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Authentification requise.'}, status=401)
 
@@ -162,11 +162,26 @@ def louer_vehicule(request, station_id):
     if str(numero_permis_saisi).strip() != str(request.user.numero_permis).strip():
         return JsonResponse({'error': 'Numéro de permis invalide.'}, status=403)
 
-
-    station = Station.objects.get(pk=station_id, actif=True)
+    try:
+        station = Station.objects.get(pk=station_id, actif=True)
+    except Station.DoesNotExist:
+        return JsonResponse({'error': 'Station introuvable.'}, status=404)
 
     if station.capacite <= 0:
         return JsonResponse({'error': 'Aucun véhicule disponible à cette station.'}, status=400)
+
+    from .models import Location
+    Location.objects.create(
+        utilisateur=request.user,
+        station=station,
+        numero_permis_utilise=numero_permis_saisi,
+        statut='en_cours'
+    )
+
+    locations_utilisateur = Location.objects.filter(utilisateur=request.user).order_by('-date_location')
+    if locations_utilisateur.count() > 10:
+        ids_a_garder = list(locations_utilisateur.values_list('id', flat=True)[:10])
+        Location.objects.filter(utilisateur=request.user).exclude(id__in=ids_a_garder).delete()
 
     station.capacite -= 1
     station.save()
@@ -238,12 +253,39 @@ def activer_reservation(request, reservation_id):
         messages.error(request, f"Erreur : {str(e)}")
         return redirect('profil')
 
+@csrf_exempt
 def annuler_location(request):
-    if request.method == "POST":
-        messages.success(request, "Location annulée avec succès.")
+    if not request.user.is_authenticated:
+        messages.error(request, "Vous devez être connecté.")
+        return redirect('connexion')
+
+    if request.method != 'POST':
+        messages.error(request, "Méthode non autorisée.")
         return redirect('map_location')
-    else:
-        messages.success(request, "Location annulée avec succès.")
+
+    try:
+        location = Location.objects.filter(
+            utilisateur=request.user,
+            statut='en_cours'
+        ).first()
+
+        if not location:
+            messages.error(request, "Aucune location en cours trouvée.")
+            return redirect('map_location')
+
+        location.statut = 'terminee'
+        location.date_retour = timezone.now()
+        location.save()
+
+        station = location.station
+        station.capacite += 1
+        station.save()
+
+        messages.success(request, "Location terminée avec succès.")
+
+    except Exception as e:
+        messages.error(request, f"Erreur : {str(e)}")
+
     return redirect('map_location')
 
 def reserver_voiture(request):
