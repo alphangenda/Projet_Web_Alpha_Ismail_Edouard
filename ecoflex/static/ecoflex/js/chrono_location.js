@@ -1,4 +1,4 @@
-'use strict';
+/* global annulerLocationURL */
 
 let tempsRestant = 30 * 60;
 let intervalID = null;
