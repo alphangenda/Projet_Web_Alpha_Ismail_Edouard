@@ -65,8 +65,8 @@ class Reservation(models.Model):
         ('active', 'Active'),
         ('annulee', 'Annulée'),
         ('terminee', 'Terminée'),
+        ('en_cours', 'En cours'),
     ]
-
     utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reservations')
     station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='reservations')
     date_reservation = models.DateField()
@@ -75,6 +75,8 @@ class Reservation(models.Model):
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='active')
     date_creation = models.DateTimeField(auto_now_add=True)
 
+    location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservation_source')
+
     class Meta:
         ordering = ['-date_reservation', '-heure_debut']
         verbose_name = 'Réservation'
@@ -82,3 +84,39 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"{self.utilisateur.username} - {self.station.nom} - {self.date_reservation}"
+
+    def peut_etre_activee(self):
+        from django.utils import timezone
+        maintenant = timezone.now()
+
+        from datetime import datetime
+        debut = datetime.combine(self.date_reservation, self.heure_debut)
+        fin = datetime.combine(self.date_reservation, self.heure_fin)
+
+        debut = timezone.make_aware(debut)
+        fin = timezone.make_aware(fin)
+
+        return self.statut == 'active' and debut <= maintenant <= fin
+
+class Location(models.Model):
+    utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='locations')
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='locations')
+    date_location = models.DateTimeField(auto_now_add=True)
+    date_retour = models.DateTimeField(null=True, blank=True)
+    numero_permis_utilise = models.CharField(max_length=5)
+    statut = models.CharField(
+        max_length=20,
+        choices=[
+            ('en_cours', 'En cours'),
+            ('terminee', 'Terminée'),
+        ],
+        default='en_cours'
+    )
+
+    class Meta:
+        ordering = ['-date_location']
+        verbose_name = 'Location'
+        verbose_name_plural = 'Locations'
+
+    def __str__(self):
+        return f"{self.utilisateur.username} - {self.station.nom} - {self.date_location.strftime('%Y-%m-%d %H:%M')}"
