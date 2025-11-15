@@ -110,7 +110,83 @@
                     </div>
                 </div>
             </div>
+            <div class="bg-secondary bg-opacity-50 rounded-4 p-4 mb-3">
+                <h2 class="h4 fw-bold mb-4">Mes réservations</h2>
 
+                {% with reservations=user.reservations.all %}
+                    {% if reservations %}
+                        <div class="accordion" id="accordionReservations">
+                            {% for reservation in reservations %}
+                            <div class="accordion-item mb-2">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{ reservation.id }}">
+                                        <div class="d-flex justify-content-between w-100 align-items-center pe-3">
+                                            <span class="small fw-semibold">{{ reservation.station.nom }}</span>
+                                            {% if reservation.statut == 'active' %}
+                                                <span class="badge bg-primary">À venir</span>
+                                            {% elif reservation.statut == 'en_cours' %}
+                                                <span class="badge bg-success">En cours</span>
+                                            {% elif reservation.statut == 'terminee' %}
+                                                <span class="badge bg-secondary">Terminée</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Annulée</span>
+                                            {% endif %}
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ reservation.id }}" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordionReservations">
+                                    <div class="accordion-body">
+                                        <div class="row mb-2">
+                                            <div class="col-6">
+                                                <small class="text-muted">Type</small>
+                                                <p class="small mb-0">{{ reservation.station.get_type_vehicule_display }}</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">Date</small>
+                                                <p class="small mb-0">{{ reservation.date_reservation|date:"d/m/Y" }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <small class="text-muted">Début</small>
+                                                <p class="small mb-0">{{ reservation.heure_debut }}</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">Fin</small>
+                                                <p class="small mb-0">{{ reservation.heure_fin }}</p>
+                                            </div>
+                                        </div>
+
+                                        {% if reservation.statut == 'active' %}
+                                            {% if reservation.peut_etre_activee %}
+                                                <form method="POST" action="{% url 'activer_reservation' reservation.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                                        🚀 Débuter ma location
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <button class="btn btn-secondary btn-sm w-100" disabled>
+                                                    ⏰ Disponible à partir de {{ reservation.heure_debut }}
+                                                </button>
+                                            {% endif %}
+                                        {% elif reservation.statut == 'en_cours' %}
+                                            <a href="{% url 'map_location' %}" class="btn btn-primary btn-sm w-100">
+                                                📍 Voir sur la carte
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="small text-muted text-center py-3">Aucune réservation</p>
+                    {% endif %}
+                {% endwith %}
+            </div>
             <div class="bg-secondary bg-opacity-50 rounded-4 p-4 mb-3">
                 <div class="row">
                     <div class="col-6">
