@@ -1,7 +1,7 @@
 /* global L */
 'use strict';
 
-const abonnements = {
+const abonnementsFiltre = {
     occasionnelle: {
         nom: 'Occasionnelle',
         minutes: 'Indéterminé',
@@ -112,7 +112,7 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
     });
 
     const typeAbonnement = window.getTypeAbonnement();
-    const abonnement = abonnements[typeAbonnement];
+    const abonnement = abonnementsFiltre[typeAbonnement];
 
     stationsFiltrees.forEach(function(station) {
         const marqueur = L.marker([station.latitude, station.longitude]).addTo(cartePrincipale);
@@ -137,26 +137,29 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
 
     document.getElementById('nombreResultats').textContent = stationsFiltrees.length;
     document.getElementById('resultatsRecherche').style.display = 'block';
+
+    console.log("Filtres appliqués : ", {
+        centreLat, centreLon, distanceMax, typeVehicule,
+        nbStationsAvant: toutesLesStations.length
+    });
+
 }
 
 function chargerStationsPourFiltre() {
-    fetch('/api/stations/')
-        .then(function(reponse) {
-            return reponse.json();
-        })
-        .then(function(donnees) {
+    return fetch('/api/stations/')
+        .then(response => response.json())
+        .then(donnees => {
             toutesLesStations = donnees;
+            console.log("Stations chargées :", toutesLesStations);
         })
-        .catch(function(erreur) {
-            console.error('Erreur lors du chargement des stations pour le filtre:', erreur);
-        });
+        .catch(erreur => console.error('Erreur de chargement stations :', erreur));
 }
 
 function gererSoumissionFiltre(e) {
     e.preventDefault();
 
     let adresse = document.getElementById('adresse').value;
-    let distanceMax = parseFloat(document.getElementById('distanceMax').value);
+    let distanceMax = parseFloat(document.getElementById('distanceMax').value) || 1000;
     let typeVehicule = document.getElementById('typeVehicule').value;
 
     if (adresse) {
@@ -200,17 +203,18 @@ function sauvegarderMarqueursOriginaux(marqueurs) {
 
 function initialiserFiltre(carte) {
     cartePrincipale = carte;
-    chargerStationsPourFiltre();
 
-    let formulaireFiltre = document.getElementById('formulaireFiltre');
-    if (formulaireFiltre) {
-        formulaireFiltre.addEventListener('submit', gererSoumissionFiltre);
-    }
+    chargerStationsPourFiltre().then(() => {
+        let formulaireFiltre = document.getElementById('formulaireFiltre');
+        if (formulaireFiltre) {
+            formulaireFiltre.addEventListener('submit', gererSoumissionFiltre);
+        }
 
-    let boutonPosition = document.getElementById('utiliserMaPosition');
-    if (boutonPosition) {
-        boutonPosition.addEventListener('click', utiliserMaPosition);
-    }
+        let boutonPosition = document.getElementById('utiliserMaPosition');
+        if (boutonPosition) {
+            boutonPosition.addEventListener('click', utiliserMaPosition);
+        }
+    });
 }
 
 window.initialiserFiltre = initialiserFiltre;
