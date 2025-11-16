@@ -170,8 +170,18 @@ def louer_vehicule(request, station_id):
     if station.capacite <= 0:
         return JsonResponse({'error': 'Aucun véhicule disponible à cette station.'}, status=400)
 
-    from .models import Location
-    Location.objects.create(
+    location_existante = Location.objects.filter(
+        utilisateur=request.user,
+        statut='en_cours'
+    ).first()
+
+    if location_existante:
+        return JsonResponse({
+            'error': 'Vous avez déjà une location en cours.',
+            'location_id': location_existante.id
+        }, status=400)
+
+    location = Location.objects.create(
         utilisateur=request.user,
         station=station,
         numero_permis_utilise=numero_permis_saisi,
@@ -186,7 +196,12 @@ def louer_vehicule(request, station_id):
     station.capacite -= 1
     station.save()
 
-    return JsonResponse({'message': f'Location confirmée à la station {station.nom}.'}, status=200)
+    return JsonResponse({
+        'success': True,
+        'message': f'Location confirmée à la station {station.nom}.',
+        'location_id': location.id
+    }, status=200)
+
 
 @csrf_exempt
 def annuler_location(request):
@@ -198,11 +213,20 @@ def annuler_location(request):
         messages.error(request, "Méthode non autorisée.")
         return redirect('map_location')
 
+    location_id = request.POST.get('location_id')
+
     try:
-        location = Location.objects.filter(
-            utilisateur=request.user,
-            statut='en_cours'
-        ).first()
+        if location_id:
+            location = Location.objects.get(
+                id=location_id,
+                utilisateur=request.user,
+                statut='en_cours'
+            )
+        else:
+            location = Location.objects.filter(
+                utilisateur=request.user,
+                statut='en_cours'
+            ).first()
 
         if not location:
             messages.error(request, "Aucune location en cours trouvée.")
@@ -218,10 +242,12 @@ def annuler_location(request):
 
         messages.success(request, "Location terminée avec succès.")
 
+    except Location.DoesNotExist:
+        messages.error(request, "Location introuvable.")
     except Exception as e:
         messages.error(request, f"Erreur : {str(e)}")
 
-    return redirect('map_location')
+    return redirect('profil')
 
 def reserver_voiture(request):
     if not request.user.is_authenticated:
