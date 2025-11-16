@@ -75,7 +75,6 @@ class Reservation(models.Model):
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='active')
     date_creation = models.DateTimeField(auto_now_add=True)
 
-    location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservation_source')
 
     class Meta:
         ordering = ['-date_reservation', '-heure_debut']
