@@ -65,8 +65,8 @@ class Reservation(models.Model):
         ('active', 'Active'),
         ('annulee', 'Annulée'),
         ('terminee', 'Terminée'),
+        ('en_cours', 'En cours'),
     ]
-
     utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reservations')
     station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='reservations')
     date_reservation = models.DateField()
@@ -74,6 +74,8 @@ class Reservation(models.Model):
     heure_fin = models.TimeField()
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='active')
     date_creation = models.DateTimeField(auto_now_add=True)
+
+    location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservation_source')
 
     class Meta:
         ordering = ['-date_reservation', '-heure_debut']
