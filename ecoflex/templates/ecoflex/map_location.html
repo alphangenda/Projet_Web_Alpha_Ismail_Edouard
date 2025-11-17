@@ -58,6 +58,17 @@
         </div>
     </div>
 
+        <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <h6 class="mb-2">Recherche rapide de stations</h6>
+            <div id="conteneur-recherche-ajax" style="position: relative;">
+                <input type="text" id="input-recherche-ajax" class="form-control"
+                    placeholder="Tapez le nom d'une station (ex: Cartier, Grande Allée...)" autocomplete="off">
+                <div id="resultats-recherche-ajax"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h5 class="card-title mb-3">Filtrer par distance depuis votre position</h5>
@@ -159,7 +170,5 @@
 <script src="{% static 'ecoflex/js/filtre_map_position.js' %}"></script>
 
 <script>const annulerLocationURL = "{% url 'annuler_location' %}";</script>
-<script src="{% static 'ecoflex/js/annuler_location_v2.js' %}"></script>
-
-
+<script src="{% static 'ecoflex/js/recherche_ajax.js' %}"></script>
 {% endblock %}

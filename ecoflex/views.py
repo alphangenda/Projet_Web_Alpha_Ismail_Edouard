@@ -350,3 +350,27 @@ def reserver_voiture(request):
         'reservation_form': reservation_form,
         'annulation_form': annulation_form
     })
+
+
+def rechercher_stations_ajax(request):
+    """
+    API AJAX pour rechercher des stations en temps réel
+    """
+    query = request.GET.get('q', '').strip()
+
+    if len(query) < 2:
+        return JsonResponse({
+            'success': False,
+            'message': 'Entrez au moins 2 caractères'
+        })
+
+    stations = Station.objects.filter(
+        actif=True,
+        nom__icontains=query
+    ).values('id', 'nom', 'type_vehicule', 'capacite', 'latitude', 'longitude')[:5]
+
+    return JsonResponse({
+        'success': True,
+        'results': list(stations),
+        'count': len(stations)
+    })
