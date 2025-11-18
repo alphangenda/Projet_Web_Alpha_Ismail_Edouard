@@ -4,6 +4,7 @@ from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm, Reservat
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
+from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -11,7 +12,7 @@ from django.http import JsonResponse
 import json
 
 from rest_framework import generics
-from .models import Station, Reservation
+from .models import Station, Reservation, Location, Location
 from .serializers import StationSerializerJson
 
 User = get_user_model()
@@ -44,6 +45,13 @@ class StationListAPIView(generics.ListAPIView):
     serializer_class = StationSerializerJson
 
 def profil(request):
+    if request.user.is_authenticated:
+        dernieres_locations = Location.objects.filter(utilisateur=request.user).order_by('-date_location')[:10]
+
+        return render(request, 'ecoflex/profil.html', {
+            'dernieres_locations': dernieres_locations
+        })
+
     return render(request, 'ecoflex/profil.html')
 
 def gestion_users(request):
@@ -141,7 +149,6 @@ def modifier_profil(request):
 @csrf_exempt
 @require_POST
 def louer_vehicule(request, station_id):
-
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Authentification requise.'}, status=401)
 
@@ -157,24 +164,157 @@ def louer_vehicule(request, station_id):
     if str(numero_permis_saisi).strip() != str(request.user.numero_permis).strip():
         return JsonResponse({'error': 'Numéro de permis invalide.'}, status=403)
 
-
-    station = Station.objects.get(pk=station_id, actif=True)
+    try:
+        station = Station.objects.get(pk=station_id, actif=True)
+    except Station.DoesNotExist:
+        return JsonResponse({'error': 'Station introuvable.'}, status=404)
 
     if station.capacite <= 0:
         return JsonResponse({'error': 'Aucun véhicule disponible à cette station.'}, status=400)
 
+    location_existante = Location.objects.filter(
+        utilisateur=request.user,
+        statut='en_cours'
+    ).first()
+
+    if location_existante:
+        return JsonResponse({
+            'error': 'Vous avez déjà une location en cours.',
+            'location_id': location_existante.id
+        }, status=400)
+
+    location = Location.objects.create(
+        utilisateur=request.user,
+        station=station,
+        numero_permis_utilise=numero_permis_saisi,
+        statut='en_cours'
+    )
+
+    locations_utilisateur = Location.objects.filter(utilisateur=request.user).order_by('-date_location')
+    if locations_utilisateur.count() > 10:
+        ids_a_garder = list(locations_utilisateur.values_list('id', flat=True)[:10])
+        Location.objects.filter(utilisateur=request.user).exclude(id__in=ids_a_garder).delete()
+
     station.capacite -= 1
     station.save()
 
-    return JsonResponse({'message': f'Location confirmée à la station {station.nom}.'}, status=200)
+    return JsonResponse({
+        'success': True,
+        'message': f'Location confirmée à la station {station.nom}.',
+        'location_id': location.id
+    }, status=200)
 
-def annuler_location(request):
-    if request.method == "POST":
-        messages.success(request, "Location annulée avec succès.")
+
+@csrf_exempt
+def activer_reservation(request, reservation_id):
+    if not request.user.is_authenticated:
+        messages.error(request, "Vous devez être connecté.")
+        return redirect('connexion')
+
+    if request.method != 'POST':
+        messages.error(request, "Méthode non autorisée.")
+        return redirect('profil')
+
+    try:
+        reservation = Reservation.objects.get(
+            id=reservation_id,
+            utilisateur=request.user,
+            statut='active'
+        )
+
+        if not reservation.peut_etre_activee():
+            messages.error(request, "Cette réservation ne peut pas encore être activée ou a expiré.")
+            return redirect('profil')
+
+        station = reservation.station
+        if station.capacite <= 0:
+            stations_proches = Station.objects.filter(
+                type_vehicule=station.type_vehicule,
+                actif=True,
+                capacite__gt=0
+            ).exclude(id=station.id)[:3]
+
+            if stations_proches.exists():
+                noms_stations = ', '.join([s.nom for s in stations_proches])
+                messages.error(
+                    request,
+                    f"Plus de véhicules disponibles à {station.nom}. "
+                    f"Essayez : {noms_stations}"
+                )
+            else:
+                messages.error(request, f"Plus de véhicules disponibles à {station.nom}.")
+
+            return redirect('profil')
+
+        location = Location.objects.create(
+            utilisateur=request.user,
+            station=station,
+            numero_permis_utilise=request.user.numero_permis,
+            statut='en_cours'
+        )
+
+        reservation.statut = 'en_cours'
+        reservation.location = location
+        reservation.save()
+
+        station.capacite -= 1
+        station.save()
+
+        messages.success(request, f"Location débutée avec succès à {station.nom} !")
         return redirect('map_location')
-    else:
-        messages.success(request, "Location annulée avec succès.")
-    return redirect('map_location')
+
+    except Reservation.DoesNotExist:
+        messages.error(request, "Réservation introuvable.")
+        return redirect('profil')
+    except Exception as e:
+        messages.error(request, f"Erreur : {str(e)}")
+        return redirect('profil')
+
+@csrf_exempt
+def annuler_location(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "Vous devez être connecté.")
+        return redirect('connexion')
+
+    if request.method != 'POST':
+        messages.error(request, "Méthode non autorisée.")
+        return redirect('map_location')
+
+    location_id = request.POST.get('location_id')
+
+    try:
+        if location_id:
+            location = Location.objects.get(
+                id=location_id,
+                utilisateur=request.user,
+                statut='en_cours'
+            )
+        else:
+            location = Location.objects.filter(
+                utilisateur=request.user,
+                statut='en_cours'
+            ).first()
+
+        if not location:
+            messages.error(request, "Aucune location en cours trouvée.")
+            return redirect('map_location')
+
+        location.statut = 'terminee'
+        location.date_retour = timezone.now()
+        location.save()
+
+        station = location.station
+        station.capacite += 1
+        station.save()
+
+        messages.success(request, "Location terminée avec succès.")
+
+    except Location.DoesNotExist:
+        messages.error(request, "Location introuvable.")
+    except Exception as e:
+        messages.error(request, f"Erreur : {str(e)}")
+
+    return redirect('profil')
 
 def reserver_voiture(request):
     if not request.user.is_authenticated:
@@ -211,4 +351,28 @@ def reserver_voiture(request):
     return render(request, 'ecoflex/reservations.html', {
         'reservation_form': reservation_form,
         'annulation_form': annulation_form
+    })
+
+
+def rechercher_stations_ajax(request):
+    """
+    API AJAX pour rechercher des stations en temps réel
+    """
+    query = request.GET.get('q', '').strip()
+
+    if len(query) < 2:
+        return JsonResponse({
+            'success': False,
+            'message': 'Entrez au moins 2 caractères'
+        })
+
+    stations = Station.objects.filter(
+        actif=True,
+        nom__icontains=query
+    ).values('id', 'nom', 'type_vehicule', 'capacite', 'latitude', 'longitude')[:5]
+
+    return JsonResponse({
+        'success': True,
+        'results': list(stations),
+        'count': len(stations)
     })

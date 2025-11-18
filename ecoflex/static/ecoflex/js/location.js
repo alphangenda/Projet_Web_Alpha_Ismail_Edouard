@@ -1,5 +1,3 @@
-'use strict';
-
 window.locationActive = false;
 
 const abonnementsReservation = {
@@ -89,7 +87,6 @@ function confirmerLocation(stationId, stationNom) {
     const inputPermis = document.getElementById('numeroPermisInput');
 
     if (!bouton || !inputPermis) {
-        console.error('Éléments de confirmation introuvables.');
         return;
     }
 
@@ -106,7 +103,11 @@ function confirmerLocation(stationId, stationNom) {
     bouton.innerHTML = 'Location...';
     bouton.disabled = true;
 
-    fetch(`/api/stations/${stationId}/louer/`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ numero_permis: numeroPermis }) })
+    fetch(`/api/stations/${stationId}/louer/`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ numero_permis: numeroPermis })
+    })
         .then(async (reponse) => {
             const data = await reponse.json();
             if (!reponse.ok) {
@@ -116,13 +117,26 @@ function confirmerLocation(stationId, stationNom) {
             return data;
         })
         .then((data) => {
+            if (data.location_id) {
+                localStorage.setItem('ecoflex_current_location_id', String(data.location_id));
+            }
+
             alert(data.message || `Location confirmée à la station "${stationNom}".`);
             fermerModal();
 
             window.locationActive = true;
 
-            if (window.demarrerChronometre) {
-                window.demarrerChronometre();
+            const heureDebut = Date.now();
+            const tempsInitial = 30 * 60;
+
+            if (typeof window.sauvegarderEtatLocation === 'function') {
+                window.sauvegarderEtatLocation(heureDebut, tempsInitial);
+            }
+
+            if (typeof window.demarrerChronometre === 'function') {
+                setTimeout(() => {
+                    window.demarrerChronometre(false);
+                }, 100);
             }
 
             return fetch('/api/stations/').then(r => r.json());
@@ -136,20 +150,20 @@ function confirmerLocation(stationId, stationNom) {
                 const station = m.options.stationData;
                 if (station && byId.has(station.id)) {
                     m.options.stationData = byId.get(station.id);
-                    m.setPopupContent(window.creerContenuPopup(m.options.stationData));
+                    if (typeof window.creerContenuPopup === 'function') {
+                        m.setPopupContent(window.creerContenuPopup(m.options.stationData));
+                    }
                 }
             });
         })
         .catch(error => {
-            console.error('Erreur :', error);
-            alert('Erreur lors de la Location.');
+            alert('Erreur lors de la location.');
         })
         .finally(() => {
             bouton.innerHTML = texteOriginal;
             bouton.disabled = false;
         });
 }
-
 
 window.ouvrirModalLocation = ouvrirModalLocation;
 window.fermerModal = fermerModal;
