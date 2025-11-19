@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import RegisterForm, CustomAuthenticationForm, ProfileForm, ReservationForm, AnnulationReservationForm
 from django.contrib import messages
@@ -9,10 +9,11 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 import json
 
 from rest_framework import generics
-from .models import Station, Reservation, Location, Location
+from .models import Station, Reservation, Location, Location, Offres, AbonnementUtilisateur
 from .serializers import StationSerializerJson
 
 User = get_user_model()
@@ -39,6 +40,54 @@ def fonctionnement(request):
 
 def map_location(request):
     return render(request, 'ecoflex/map_location.html')
+
+@login_required
+def api_abonnement_actif(request):
+    """
+    Retourne l'abonnement actif de l'utilisateur s'il existe.
+    """
+    abo = request.user.abonnement_actif()
+
+    if not abo:
+        return JsonResponse({"has": False})
+
+    offre = abo.offre
+
+    return JsonResponse({
+        "has": True,
+        "type": offre.type_abonnement,
+        "libelle": offre.get_type_abonnement_display(),
+        "vehicule": offre.vehicule,
+        "duree_minutes": offre.duree_minutes or 0,
+        "prix": f"{offre.prix} {offre.unite}",
+    })
+
+def activer_abonnement(request, vehicule, type):
+    if not request.user.is_authenticated:
+        return redirect("connexion")
+
+    offre = get_object_or_404(
+        Offres,
+        vehicule=vehicule,
+        type_abonnement=type
+    )
+
+    AbonnementUtilisateur.objects.filter(
+        utilisateur=request.user,
+        actif=True
+    ).update(actif=False, date_fin=timezone.now())
+
+    abo = AbonnementUtilisateur.objects.create(
+        utilisateur=request.user,
+        offre=offre,
+        actif=True,
+        date_debut=timezone.now()
+    )
+
+    abo.activer()
+
+    messages.success(request, "Votre abonnement a été activé avec succès !")
+    return redirect("tarif")
 
 class StationListAPIView(generics.ListAPIView):
     queryset = Station.objects.filter(actif=True)

@@ -28,7 +28,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %} {% url 'activer_abonnement' 'velo' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     Choisir ce forfait →
                 </a>
@@ -55,7 +55,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'velo' 'mensuel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     S’abonner →
                 </a>
@@ -81,7 +81,7 @@
                 </ul>
             </div>
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'velo' 'annuel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     S’abonner →
                 </a>
@@ -111,7 +111,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'trottinette' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     Choisir ce forfait →
                 </a>
@@ -138,7 +138,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'trottinette' 'mensuel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     S’abonner →
                 </a>
@@ -166,7 +166,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'trottinette' 'annuel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     S’abonner →
                 </a>
@@ -197,7 +197,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'voiture' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     Choisir ce forfait →
                 </a>
@@ -224,7 +224,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'voiture' 'mensuel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     S’abonner →
                 </a>
@@ -251,7 +251,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'abonnement' %}{% else %}{% url 'connexion' %}{% endif %}"
+                <a href="{% if user.is_authenticated %} {% url 'activer_abonnement' 'voiture' 'annuel' %}{% else %}{% url 'connexion' %}{% endif %}"
                     class="btn-order">
                     S’abonner →
                 </a>

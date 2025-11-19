@@ -46,19 +46,8 @@
 {% endif %}
 <div class="container mt-4">
     <h2 class="text-center mb-4">Carte interactive - EcoFlex</h2>
-    <div class="row align-items-end mb-3">
-        <div class="col-auto">
-            <label for="typeAbonnement" class="form-label">Type d'abonnement</label>
-            <select class="form-select" id="typeAbonnement">
-                <option value="occasionnelle">Occasionnelle</option>
-                <option value="journalier">Journalier</option>
-                <option value="mensuel">Mensuel</option>
-                <option value="annuel">Annuel</option>
-            </select>
-        </div>
-    </div>
 
-        <div class="card shadow-sm mb-3">
+    <div class="card shadow-sm mb-3">
         <div class="card-body">
             <h6 class="mb-2">Recherche rapide de stations</h6>
             <div id="conteneur-recherche-ajax" style="position: relative;">
@@ -160,6 +149,21 @@
 <script>
     window.utilisateurConnecte = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
 </script>
+<script>
+    window.abonnementInfo = { has: false };
+
+
+    fetch("{% url 'api_abonnement_actif' %}")
+        .then(r => r.json())
+        .then(data => {
+            window.abonnementInfo = data;
+        })
+        .catch(() => {
+            window.abonnementInfo = { has: false };
+        });
+
+</script>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
