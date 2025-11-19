@@ -49,7 +49,7 @@ class Offres(models.Model):
 
     VEHICULES = [
         ('velo', 'Vélo'),
-        ('trotinette', 'Trottinette'),
+        ('trottinette', 'Trottinette'),
         ('voiture', 'Voiture'),
     ]
 
