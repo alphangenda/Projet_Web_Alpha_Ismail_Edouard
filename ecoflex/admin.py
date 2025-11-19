@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Station
+from .models import User, Station, Offres
 from django.contrib.auth.admin import UserAdmin
 
 admin.site.site_header = "Administration EcoFlex"
@@ -20,3 +20,8 @@ class StationAdmin(admin.ModelAdmin):
     search_fields = ('nom',)
 
 
+@admin.register(Offres)
+class OffresAdmin(admin.ModelAdmin):
+    list_display = ('vehicule', 'type_abonnement', 'prix', 'unite', 'populaire')
+    list_filter = ('vehicule', 'type_abonnement', 'populaire')
+    search_fields = ('vehicule', 'type_abonnement')

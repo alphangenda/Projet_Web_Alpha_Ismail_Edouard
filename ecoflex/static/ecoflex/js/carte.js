@@ -2,67 +2,32 @@
 
 /* global L */
 
-const abonnements = {
-    occasionnelle: {
-        nom: 'Occasionnelle',
-        minutes: 'Indéterminé',
-        prix: '0.50$ par minute'
-    },
-    journalier: {
-        nom: 'Journalier',
-        minutes: '24 heures',
-        prix: '15.00$'
-    },
-    mensuel: {
-        nom: 'Mensuel',
-        minutes: '30 minutes',
-        prix: 'Inclus dans l\'abonnement mensuel'
-    },
-    annuel: {
-        nom: 'Annuel',
-        minutes: '30 minutes',
-        prix: 'Inclus dans l\'abonnement annuel'
-    }
-};
-
-function getTypeAbonnement() {
-    const select = document.getElementById('typeAbonnement');
-    return select ? select.value : 'occasionnelle';
-}
 
 function creerContenuPopup(station) {
-    const typeAbonnement = getTypeAbonnement();
-    const abonnement = abonnements[typeAbonnement];
-
     const nomSecurise = station.nom.split('\'').join('\\\'');
 
     let contenu = `<b>${station.nom}</b><br>
         Type : ${station.type_vehicule}<br>
         Capacité : ${station.capacite}`;
 
-
     if (window.utilisateurConnecte) {
-        contenu += `<br><br><strong>Votre abonnement</strong><br>
-            Type : ${abonnement.nom}<br>
-            Temps disponibles : ${abonnement.minutes}<br>
-            Prix : ${abonnement.prix}<br><br>`;
 
         if (!window.locationActive) {
             contenu += `<button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')"
-                class="btn btn-success w-100">Louer maintenant</button>`;
-        }
-        else {
-            contenu += `<div class="alert alert-warning text-center">
+                class="btn btn-success w-100 mt-2">Louer maintenant</button>`;
+        } else {
+            contenu += `<div class="alert alert-warning text-center mt-3">
                 Une location est déjà en cours.
             </div>`;
         }
 
     } else {
         contenu += `<div class="alert alert-info text-center mt-3">
-            Connectez-vous pour voir vos abonnements et louer un véhicule.<br>
-            <a href="/connexion/" class="btn btn-primary btn-sm mt-2 color:white">Se connecter</a>
+            Connectez-vous pour louer un véhicule.<br>
+            <a href="/connexion/" class="btn btn-primary btn-sm mt-2">Se connecter</a>
         </div>`;
     }
+
     return contenu;
 }
 
@@ -93,16 +58,6 @@ function initialiserCarte() {
             });
 
             window.marqueursActuels = markers.map(item => item.marker);
-
-
-            const choixAbonnement = document.getElementById('typeAbonnement');
-            if (choixAbonnement) {
-                choixAbonnement.addEventListener('change', () => {
-                    markers.forEach(item => {
-                        item.marker.setPopupContent(creerContenuPopup(item.station));
-                    });
-                });
-            }
 
             if (window.initialiserFiltre) {
                 window.initialiserFiltre(map);
@@ -138,6 +93,5 @@ function mettreAJourCarte(map) {
 
 document.addEventListener('DOMContentLoaded', initialiserCarte);
 
-window.getTypeAbonnement = getTypeAbonnement;
 window.creerContenuPopup = creerContenuPopup;
 window.mettreAJourCarte = mettreAJourCarte;
