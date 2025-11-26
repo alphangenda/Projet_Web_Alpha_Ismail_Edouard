@@ -4,9 +4,12 @@ from . import views
 urlpatterns = [
     path('', views.accueil, name='accueil'),
     path('tarif/', views.tarif, name='tarif'),
+    path('abonnement/', views.abonnement, name='abonnement'),
     path('fonctionnement/', views.fonctionnement, name='fonctionnement'),
-    path('tarif/', views.tarif, name='tarif'),
     path('map_location/', views.map_location, name='map_location'),
+    path('api/abonnement-actif/', views.api_abonnement_actif, name='api_abonnement_actif'),
+    path("abonnement/activer/<str:vehicule>/<str:type>/", views.activer_abonnement, name="activer_abonnement"),
+
     path('api/stations/<int:station_id>/louer/', views.louer_vehicule, name='louer_vehicule'),
     path('api/stations/', views.StationListAPIView.as_view(), name='station-list'),
     path('profil/', views.profil, name='profil'),
@@ -19,6 +22,7 @@ urlpatterns = [
     path('annuler_location/', views.annuler_location, name='annuler_location'),
     path('reserver_voiture/', views.reserver_voiture, name='reserver_voiture'),
     path('activer_reservation/<int:reservation_id>/', views.activer_reservation, name='activer_reservation'),
+    path('api/rechercher-stations/', views.rechercher_stations_ajax, name='rechercher_stations_ajax'),
 ]
 
 handler404 = 'monapp.views.custom_404'

@@ -1,7 +1,10 @@
+from datetime import timedelta, timezone
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import random
 from django.conf import settings
+from datetime import timedelta
+from django.utils import timezone
 
 class User(AbstractUser):
 
@@ -17,6 +20,9 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Utilisateur"
         verbose_name_plural = "Utilisateurs"
+
+    def abonnement_actif(self):
+        return self.abonnements.filter(actif=True).order_by('-date_debut').first()
 
     def save(self, *args, **kwargs):
         """Génère un numéro de permis unique à 5 chiffres si non défini."""
@@ -38,6 +44,85 @@ class User(AbstractUser):
             return self.first_name
         else:
             return self.username
+
+class Offres(models.Model):
+
+    VEHICULES = [
+        ('velo', 'Vélo'),
+        ('trottinette', 'Trottinette'),
+        ('voiture', 'Voiture'),
+    ]
+
+    TYPES = [
+        ('occasionnel', 'Occasionnel'),
+        ('journalier', 'Journalier'),
+        ('mensuel', 'Mensuel'),
+        ('annuel', 'Annuel'),
+    ]
+
+    vehicule = models.CharField(max_length=20, choices=VEHICULES)
+    type_abonnement = models.CharField(max_length=20, choices=TYPES)
+
+    prix = models.DecimalField(max_digits=6, decimal_places=2)
+    unite = models.CharField(max_length=50)
+
+    prix_secondaire = models.CharField(max_length=100, blank=True)
+    # Journalier : 19,00 $ / 24 h
+
+    duree_incluse = models.CharField(max_length=100, blank=True)
+
+    # Trajets illimités de 30 minutes
+
+    tarif_supplementaire = models.CharField(max_length=200, blank=True)
+
+    # + 0,25 $ / minute après 30 minutes
+
+    depot = models.CharField(max_length=100, blank=True)
+
+    # Dépôt remboursable de 100 $ / vélo
+
+    avantages = models.TextField(blank=True)
+    # liste ou texte libre (avantages, assurance, recharge, etc.)
+
+    populaire = models.BooleanField(default=False)
+
+    duree_minutes = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['vehicule', 'type_abonnement']
+
+    def __str__(self):
+        return f"{self.vehicule} - {self.type_abonnement}"
+
+class AbonnementUtilisateur(models.Model):
+    utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='abonnements')
+    offre = models.ForeignKey(Offres, on_delete=models.CASCADE, related_name='abonnements_utilisateurs')
+
+    date_debut = models.DateTimeField()
+    date_fin = models.DateTimeField(null=True, blank=True)
+    actif = models.BooleanField(default=True)
+
+    def activer(self):
+        self.date_debut = timezone.now()
+
+        if self.offre.type_abonnement == 'journalier':
+            self.date_fin = self.date_debut + timedelta(hours=24)
+        elif self.offre.type_abonnement == 'mensuel':
+            self.date_fin = self.date_debut + timedelta(days=30)
+        elif self.offre.type_abonnement == 'annuel':
+            self.date_fin = self.date_debut + timedelta(days=365)
+        elif self.offre.type_abonnement == 'occasionnel':
+            self.date_fin = None
+
+        self.save()
+
+    def desactiver(self):
+        self.actif = False
+        self.date_fin = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return f"{self.utilisateur.username} - {self.offre.type_abonnement}"
 
 class Station(models.Model):
     TYPE_VEHICULE = [
