@@ -1,5 +1,5 @@
 /* global annulerLocationURL */
-
+'use strict';
 let tempsRestant = 30 * 60;
 let intervalID = null;
 const STORAGE_KEY = 'ecoflex_location_active';
@@ -192,7 +192,6 @@ function terminerLocation() {
         }
 
         const locationId = localStorage.getItem('ecoflex_current_location_id');
-        supprimerEtatLocation();
 
         if (typeof annulerLocationURL !== 'undefined') {
             const form = document.createElement('form');
@@ -218,6 +217,7 @@ function terminerLocation() {
 
             document.body.appendChild(form);
             form.submit();
+            supprimerEtatLocation();
         }
     }
 }
