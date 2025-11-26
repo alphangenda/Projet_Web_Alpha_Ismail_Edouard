@@ -19,10 +19,7 @@ urlpatterns = [
     path('annuler_location/', views.annuler_location, name='annuler_location'),
     path('reserver_voiture/', views.reserver_voiture, name='reserver_voiture'),
     path('activer_reservation/<int:reservation_id>/', views.activer_reservation, name='activer_reservation'),
-
-
-
-
-
-
 ]
+
+handler404 = 'monapp.views.custom_404'
+handler500 = 'monapp.views.custom_500'
