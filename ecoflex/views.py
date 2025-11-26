@@ -202,18 +202,6 @@ def louer_vehicule(request, station_id):
         return JsonResponse({'error': 'Authentification requise.'}, status=401)
 
     try:
-        data = json.loads(request.body.decode('utf-8'))
-        numero_permis_saisi = data.get('numero_permis')
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Requête invalide.'}, status=400)
-
-    if not numero_permis_saisi:
-        return JsonResponse({'error': 'Numéro de permis manquant.'}, status=400)
-
-    if str(numero_permis_saisi).strip() != str(request.user.numero_permis).strip():
-        return JsonResponse({'error': 'Numéro de permis invalide.'}, status=403)
-
-    try:
         station = Station.objects.get(pk=station_id, actif=True)
     except Station.DoesNotExist:
         return JsonResponse({'error': 'Station introuvable.'}, status=404)
@@ -235,7 +223,7 @@ def louer_vehicule(request, station_id):
     location = Location.objects.create(
         utilisateur=request.user,
         station=station,
-        numero_permis_utilise=numero_permis_saisi,
+        numero_permis_utilise=request.user.numero_permis,
         statut='en_cours'
     )
 
@@ -355,6 +343,8 @@ def annuler_location(request):
         station = location.station
         station.capacite += 1
         station.save()
+
+
 
         messages.success(request, "Location terminée avec succès.")
 

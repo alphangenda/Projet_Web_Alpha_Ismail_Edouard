@@ -50,12 +50,6 @@ function ouvrirModalLocation(stationId, stationNom, typeVehicule) {
                     </div>
 
                     ${blocAbonnement}
-
-                    <div class="mt-3">
-                        <label for="numeroPermisInput" class="form-label fw-bold">Numéro de permis</label>
-                        <input type="text" id="numeroPermisInput" class="form-control" maxlength="5" placeholder="Entrez votre numéro à 5 chiffres">
-                        <div class="invalid-feedback">Veuillez entrer votre numéro de permis.</div>
-                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -81,20 +75,10 @@ function fermerModal() {
 
 function confirmerLocation(stationId, stationNom) {
     const bouton = document.querySelector('#modalLocation .btn-success');
-    const inputPermis = document.getElementById('numeroPermisInput');
 
-    if (!bouton || !inputPermis) {
+    if (!bouton) {
         return;
     }
-
-    const numeroPermis = inputPermis.value.trim();
-
-    if (!numeroPermis) {
-        inputPermis.classList.add('is-invalid');
-        return;
-    }
-
-    inputPermis.classList.remove('is-invalid');
 
     const texteOriginal = bouton.innerHTML;
     bouton.innerHTML = 'Location...';
@@ -103,7 +87,7 @@ function confirmerLocation(stationId, stationNom) {
     fetch(`/api/stations/${stationId}/louer/`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ numero_permis: numeroPermis })
+        body: JSON.stringify({})
     })
         .then(async (reponse) => {
             const data = await reponse.json();
