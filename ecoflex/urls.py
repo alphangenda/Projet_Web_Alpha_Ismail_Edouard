@@ -25,5 +25,9 @@ urlpatterns = [
     path('api/rechercher-stations/', views.rechercher_stations_ajax, name='rechercher_stations_ajax'),
 ]
 
+handler400 = 'monapp.views.custom_400'
+handler401 = 'monapp.views.custom_401'
+handler402 = 'monapp.views.custom_402'
+handler403 = 'monapp.views.custom_403'
 handler404 = 'monapp.views.custom_404'
 handler500 = 'monapp.views.custom_500'

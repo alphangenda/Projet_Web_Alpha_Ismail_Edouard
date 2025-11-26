@@ -426,6 +426,18 @@ def rechercher_stations_ajax(request):
         'count': len(stations)
     })
 
+def custom_400(request, exception=None):
+    return render(request, '400.html', status=400)
+
+def custom_401(request, exception=None):
+    return render(request, '401.html', status=401)
+
+def custom_402(request, exception=None):
+    return render(request, '402.html', status=402)
+
+def custom_403(request, exception=None):
+    return render(request, '403.html', status=403)
+
 def custom_404(request, exception=None):
     return render(request, '404.html', status=404)
 
