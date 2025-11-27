@@ -123,7 +123,7 @@ function demarrerChronometre(restaurer = false) {
         font-size: 13px;
         font-weight: bold;
     `;
-    boutonAnnuler.addEventListener('click', terminerLocation);
+    boutonAnnuler.addEventListener('click', annuler_location);
 
     const boutonProlonger = document.createElement('button');
     boutonProlonger.innerText = 'Prolonger (+15 min)';
