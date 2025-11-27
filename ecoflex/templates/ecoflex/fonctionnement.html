@@ -25,10 +25,10 @@
                         </ul>
                         <p>Puis, connectez-vous à votre compte ou inscrivez-vous :</p>
                         <ul>
-                            <li><a href="#">Mon compte</a></li>
-                            <li><a href="#">S'inscrire</a></li>
+                            <li><a href="{% url 'connexion' %}">Mon compte</a></li>
+                            <li><a href="{% url 'inscription' %}">S'inscrire</a></li>
                         </ul>
-                        <p>Enfin, choisissez un forfait : <a href="#">La tarification</a></p>
+                        <p>Enfin, choisissez un forfait : <a href="{% url 'tarif' %}">La tarification</a></p>
                     </div>
 
                     <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
