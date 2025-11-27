@@ -80,7 +80,7 @@
             </div>
 
             <div class="mb-3">
-                {{ form.province.label_tag }}
+                {{ form.province.label_tag }}<p>(2 lettres en majuscule)</p>
                 {{ form.province }}
                 {% if form.province.errors %}
                     <div class="text-danger small">{{ form.province.errors }}</div>
