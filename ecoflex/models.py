@@ -1,37 +1,105 @@
-from datetime import timedelta, timezone
+from datetime import timedelta, timezone, date
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import random
 from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+
 
 class User(AbstractUser):
-
     numero_permis = models.CharField(max_length=5, unique=True, blank=True, null=True)
 
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
-    birth_date = models.DateField(null=True, blank=True)
-    address = models.CharField(max_length=255, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    province = models.CharField(max_length=100, null=True, blank=True)
-    postal_code = models.CharField(max_length=20, null=True, blank=True)
+    phone_number = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$',
+                message='Format de téléphone invalide.'
+            )
+        ]
+    )
+
+    birth_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    address = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[0-9]{1,5}\s+[0-9a-zA-ZÀ-ÿ\s\-\']+(?:,\s*(?:Suite|Apt|Bureau|Unité)\s+[0-9a-zA-Z\-]+)?$',
+                message='Adresse invalide.'
+            )
+        ]
+    )
+
+    city = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r"^[a-zA-ZÀ-ÿ\s'-]+$",
+                message='Ville invalide.'
+            )
+        ]
+    )
+
+    province = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^(AB|BC|MB|NB|NL|NS|NT|NU|ON|PE|QC|SK|YT)$',
+                message='Province invalide.'
+            )
+        ]
+    )
+
+    postal_code = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^^[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] [0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]$ || ^^[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]$',
+                message='Code postal invalide.'
+            )
+        ]
+    )
 
     class Meta:
         verbose_name = "Utilisateur"
         verbose_name_plural = "Utilisateurs"
 
+    def clean(self):
+        super().clean()
+        if self.birth_date:
+            today = date.today()
+            age = today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+            if age < 16:
+                raise ValidationError({'birth_date': 'Vous devez avoir au moins 16 ans.'})
+            if age > 120:
+                raise ValidationError({'birth_date': 'La date de naissance ne semble pas valide.'})
+
     def abonnement_actif(self):
         return self.abonnements.filter(actif=True).order_by('-date_debut').first()
 
     def save(self, *args, **kwargs):
-        """Génère un numéro de permis unique à 5 chiffres si non défini."""
         if not self.numero_permis:
             self.numero_permis = self._generer_code_unique()
         super().save(*args, **kwargs)
 
     def _generer_code_unique(self):
-        """Retourne un code unique à 5 chiffres non utilisé par un autre utilisateur."""
         while True:
             code = str(random.randint(10000, 99999))
             if not User.objects.filter(numero_permis=code).exists():

@@ -97,8 +97,11 @@ def profil(request):
     if request.user.is_authenticated:
         dernieres_locations = Location.objects.filter(utilisateur=request.user).order_by('-date_location')[:10]
 
+        now = timezone.now()
+
         return render(request, 'ecoflex/profil.html', {
-            'dernieres_locations': dernieres_locations
+            'dernieres_locations': dernieres_locations,
+            'now': now
         })
 
     return render(request, 'ecoflex/profil.html')

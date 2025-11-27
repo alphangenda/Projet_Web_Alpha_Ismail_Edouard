@@ -123,7 +123,9 @@
                                             data-bs-target="#collapse{{ reservation.id }}">
                                         <div class="d-flex justify-content-between w-100 align-items-center pe-3">
                                             <span class="small fw-semibold">{{ reservation.station.nom }}</span>
-                                            {% if reservation.statut == 'active' %}
+                                            {% if reservation.date_reservation < now.date %}
+                                                <span class="badge bg-secondary">Terminée</span>
+                                            {% elif reservation.statut == 'active' %}
                                                 <span class="badge bg-primary">À venir</span>
                                             {% elif reservation.statut == 'en_cours' %}
                                                 <span class="badge bg-success">En cours</span>
@@ -151,11 +153,11 @@
                                         <div class="row mb-3">
                                             <div class="col-6">
                                                 <small class="text-muted">Début</small>
-                                                <p class="small mb-0">{{ reservation.heure_debut }}</p>
+                                                <p class="small mb-0">{{ reservation.heure_debut|time:"H\hi" }}</p>
                                             </div>
                                             <div class="col-6">
                                                 <small class="text-muted">Fin</small>
-                                                <p class="small mb-0">{{ reservation.heure_fin }}</p>
+                                                <p class="small mb-0">{{ reservation.heure_fin|time:"H\hi" }}</p>
                                             </div>
                                         </div>
 
@@ -164,17 +166,17 @@
                                                 <form method="POST" action="{% url 'activer_reservation' reservation.id %}">
                                                     {% csrf_token %}
                                                     <button type="submit" class="btn btn-success btn-sm w-100">
-                                                        🚀 Débuter ma location
+                                                        Débuter ma location
                                                     </button>
                                                 </form>
                                             {% else %}
                                                 <button class="btn btn-secondary btn-sm w-100" disabled>
-                                                    ⏰ Disponible à partir de {{ reservation.heure_debut }}
+                                                    Disponible à partir de {{ reservation.heure_debut|time:"H:i" }}
                                                 </button>
                                             {% endif %}
                                         {% elif reservation.statut == 'en_cours' %}
                                             <a href="{% url 'map_location' %}" class="btn btn-primary btn-sm w-100">
-                                                📍 Voir sur la carte
+                                                Voir sur la carte
                                             </a>
                                         {% endif %}
                                     </div>
