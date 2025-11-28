@@ -8,15 +8,63 @@
     <title>{% block title %}EcoFlex - Mobilité urbaine partagée{% endblock %}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .custom-navbar {
+            background: #e0e0e0;
+        }
 
-    {% block extra_css %}{% endblock %}
+        .nav-logo {
+            width: 60px;
+            height: auto;
+        }
+
+        .nav-links .nav-link {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .nav-links .nav-link:hover {
+            color: #000;
+        }
+
+        .account-btn {
+            background: #000;
+            color: #fff !important;
+            padding: 6px 22px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: none;
+        }
+
+        .signup-btn {
+            background: #ccc;
+            color: #000 !important;
+            padding: 6px 22px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: none;
+        }
+
+        .signup-btn:hover {
+            background: #b5b5b5;
+        }
+
+        .navbar-nav {
+            align-items: center;
+        }
+    </style>
+    {% block extra_css %}
+
+    {% endblock %}
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-success" href="{% url 'accueil' %}">
-                🌿 EcoFlex
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="container d-flex align-items-center justify-content-between">
+
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="{% url 'accueil' %}">
+                <img src="{% static 'ecoflex/images/logo.png' %}" alt="EcoFlex" class="nav-logo">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -24,7 +72,8 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+
+                <ul class="navbar-nav mx-auto gap-4 nav-links">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'tarif' %}">Tarif</a>
                     </li>
@@ -35,40 +84,34 @@
                         <a class="nav-link" href="{% url 'map_location' %}">Carte de location</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reserver_voiture' %}">Réserverations</a>
+                        <a class="nav-link" href="{% url 'reserver_voiture' %}">Réservations</a>
                     </li>
-                    {% if user %}
-                    {% if user.is_superuser %}
+
+                    {% if user.is_authenticated and user.is_superuser %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'gestion_users' %}">Gestion utilisateurs</a>
                     </li>
                     {% endif %}
-                    {% endif %}
                 </ul>
 
-                <ul class="navbar-nav ms-auto">
+                <div class="d-flex align-items-center gap-3">
+
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profil' %}">Bienvenue! {{ user.username }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-success btn-sm ms-2" href="{% url 'deconnexion' %}">Se déconnecter</a>
-                    </li>
+                    <a class="btn account-btn" href="{% url 'profil' %}"><span class="nav-link m-0">Mon
+                            compte</span></a>
+
+                    <a class="btn signup-btn" href="{% url 'deconnexion' %}">Se déconnecter</a>
+
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profil' %}">Mon profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-success btn-sm ms-2" href="{% url 'connexion' %}">Se connecter</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-success btn-sm ms-2" href="{% url 'inscription' %}">Inscription</a>
-                    </li>
+                    <a class="btn account-btn" href="{% url 'connexion' %}">Se connecter</a>
+                    <a class="btn signup-btn" href="{% url 'inscription' %}">Inscription</a>
                     {% endif %}
-                </ul>
+
+                </div>
             </div>
         </div>
     </nav>
+
 
     {% if messages %}
     <div class="container mt-3">

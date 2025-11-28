@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!!0)3)x%t-1!viz=qegr%q2w%rzf400hrf(rfo%-p=^$@%5o89'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+
 
 ALLOWED_HOSTS = ["ecoflex-ffc7434419b9.herokuapp.com", "127.0.0.1", "localhost"]
 
@@ -116,6 +117,7 @@ TIME_ZONE = 'America/Montreal'
 USE_I18N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
