@@ -37,17 +37,17 @@
                                     <td>
                                         <a href="#" class="btn btn-sm btn-outline-primary">Voir profil</a>
                                         {% if user_item.is_active %}
-                                        <a href="#" class="btn btn-sm btn-warning **action-status-btn**"
-                                            data-action="désactiver" **data-url="{% url 'action_status' user_item.id %}"
-                                            **>
+                                        <a href="#" class="btn btn-sm btn-warning"
+                                            onclick="confirmerChangementStatut(event, '{% url 'action_status' user_item.id %}', 'désactiver'); return false;">
                                             Désactiver
                                         </a>
+
                                         {% else %}
-                                        <a href="#" class="btn btn-sm btn-success **action-status-btn**"
-                                            data-action="activer" **data-url="{% url 'action_status' user_item.id %}"
-                                            **>
+                                        <a href="#" class="btn btn-sm btn-success"
+                                            onclick="confirmerChangementStatut(event, '{% url 'action_status' user_item.id %}', 'activer'); return false;">
                                             Activer
                                         </a>
+
                                         {% endif %}
                                     </td>
                                 </tr>
