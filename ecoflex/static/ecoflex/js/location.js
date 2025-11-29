@@ -1,9 +1,6 @@
-'use strict';
 window.locationActive = false;
 
 function ouvrirModalLocation(stationId, stationNom, typeVehicule) {
-
-
     const nomSecurise = stationNom.replace(/'/g, '\\\'').replace(/"/g, '\\"');
     const info = window.abonnementInfo || { has: false };
 
@@ -63,7 +60,6 @@ function ouvrirModalLocation(stationId, stationNom, typeVehicule) {
     `;
 
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-
 }
 
 function fermerModal() {
@@ -92,7 +88,11 @@ function confirmerLocation(stationId, stationNom) {
         .then(async (reponse) => {
             const data = await reponse.json();
             if (!reponse.ok) {
-                alert(data.error || 'Erreur lors de la réservation.');
+                if (typeof window.afficherMessage === 'function') {
+                    window.afficherMessage('danger', data.error || 'Erreur lors de la réservation.');
+                } else {
+                    alert(data.error || 'Erreur lors de la réservation.');
+                }
                 throw new Error(data.error || 'Erreur serveur');
             }
             return data;
@@ -102,7 +102,11 @@ function confirmerLocation(stationId, stationNom) {
                 localStorage.setItem('ecoflex_current_location_id', String(data.location_id));
             }
 
-            alert(data.message || `Location confirmée à la station "${stationNom}".`);
+            if (typeof window.afficherMessage === 'function') {
+                window.afficherMessage('success', data.message || `Location confirmée à la station "${stationNom}".`);
+            } else {
+                alert(data.message || `Location confirmée à la station "${stationNom}".`);
+            }
             fermerModal();
 
             window.locationActive = true;
@@ -134,7 +138,6 @@ function confirmerLocation(stationId, stationNom) {
                             m.setPopupContent(window.creerContenuPopup(m.options.stationData));
                         }
                     }
-
                 });
             }
             if (Array.isArray(window.marqueursFiltres)) {
@@ -148,10 +151,13 @@ function confirmerLocation(stationId, stationNom) {
                     }
                 });
             }
-
         })
         .catch(error => {
-            alert('Erreur lors de la location.');
+            if (typeof window.afficherMessage === 'function') {
+                window.afficherMessage('danger', 'Erreur lors de la location.');
+            } else {
+                alert('Erreur lors de la location.');
+            }
         })
         .finally(() => {
             bouton.innerHTML = texteOriginal;
