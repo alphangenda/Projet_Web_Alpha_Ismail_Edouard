@@ -373,7 +373,8 @@ Accueil - EcoFlex
         </div>
 
         <div class="fonctionnement-button">
-            <button>En savoir plus</button>
+            <button><a style="color: inherit; text-decoration: none;" href="{% url 'fonctionnement' %}">En savoir
+                    plus</a></button>
         </div>
 
     </div>
@@ -411,10 +412,15 @@ Accueil - EcoFlex
             <span class="">commence sur la</span>
             <span class="">carte</span>
         </div>
-        <div class="big-card"></div>
+        <div class="big-card">
+            <img src="{% static 'ecoflex/images/map_mockup.png' %}" alt="map"
+                style="width:100%; height:100%; border-radius:30px; object-fit: cover; border: 8px solid #000;">
+        </div>
 
         <div class="cta-btn">
-            <button>En savoir plus sur votre trajet</button>
+            <button><a style="color: inherit; text-decoration: none;" href="{% url 'map_location' %}">En savoir plus sur
+                    votre
+                    trajet</a></button>
         </div>
 
     </div>
