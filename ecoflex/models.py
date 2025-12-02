@@ -91,8 +91,8 @@ class User(AbstractUser):
             if age > 120:
                 raise ValidationError({'birth_date': 'La date de naissance ne semble pas valide.'})
 
-    def abonnement_actif(self):
-        return self.abonnements.filter(actif=True).order_by('-date_debut').first()
+    def abonnement_actif_par_vehicule(self, vehicule):
+        return self.abonnements.filter(actif=True, offre__vehicule=vehicule).order_by('-date_debut').first()
 
     def save(self, *args, **kwargs):
         if not self.numero_permis:
@@ -171,6 +171,12 @@ class AbonnementUtilisateur(models.Model):
     actif = models.BooleanField(default=True)
 
     def activer(self):
+        AbonnementUtilisateur.objects.filter(
+            utilisateur=self.utilisateur,
+            actif=True,
+            offre__vehicule=self.offre.vehicule
+        ).update(actif=False)
+
         self.date_debut = timezone.now()
 
         if self.offre.type_abonnement == 'journalier':
@@ -182,12 +188,33 @@ class AbonnementUtilisateur(models.Model):
         elif self.offre.type_abonnement == 'occasionnel':
             self.date_fin = None
 
+        self.actif = True
         self.save()
 
     def desactiver(self):
         self.actif = False
         self.date_fin = timezone.now()
         self.save()
+
+
+    def clean(self):
+        super().clean()
+
+        vehicule = self.offre.vehicule
+
+        deja_actif = AbonnementUtilisateur.objects.filter(
+            utilisateur=self.utilisateur,
+            offre__vehicule=vehicule,
+            actif=True
+        )
+
+        if self.pk:
+            deja_actif = deja_actif.exclude(pk=self.pk)
+
+        if deja_actif.exists():
+            raise ValidationError(
+                f"L'utilisateur a déjà un abonnement actif pour le véhicule : {vehicule}."
+            )
 
     def __str__(self):
         return f"{self.utilisateur.username} - {self.offre.type_abonnement}"

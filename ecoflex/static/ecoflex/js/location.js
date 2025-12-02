@@ -1,6 +1,26 @@
 window.locationActive = false;
 
 function ouvrirModalLocation(stationId, stationNom, typeVehicule) {
+
+    fetch(`/api/abonnement/actif/${typeVehicule}/`)
+    .then(r => r.json())
+    .then(data => {
+
+        // 2. On met à jour les infos globales
+        window.abonnementInfo = data;
+
+        // 3. On ouvre le modal APRES avoir obtenu les infos
+        afficherModalLocation(stationId, stationNom, typeVehicule);
+
+    })
+    .catch(() => {
+        window.abonnementInfo = { has: false };
+        afficherModalLocation(stationId, stationNom, typeVehicule);
+    });
+}
+
+function afficherModalLocation(stationId, stationNom, typeVehicule) {
+
     const nomSecurise = stationNom.replace(/'/g, '\\\'').replace(/"/g, '\\"');
     const info = window.abonnementInfo || { has: false };
 
