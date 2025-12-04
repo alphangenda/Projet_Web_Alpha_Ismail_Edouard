@@ -176,6 +176,7 @@ Accueil - EcoFlex
     .card.expanded {
         width: 65%;
         justify-content: flex-start;
+
         padding: 40px;
     }
 
@@ -188,7 +189,7 @@ Accueil - EcoFlex
 
     .card-expanded-content h2 {
         font-size: 2.5rem;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
 
     .card.expanded .card-expanded-content {
@@ -357,6 +358,8 @@ Accueil - EcoFlex
         justify-content: end;
         align-items: center;
     }
+
+    .more-options {}
 </style>
 {% endblock %}
 
@@ -429,7 +432,7 @@ Accueil - EcoFlex
 
                 <div class="option">
                     <div style="border-bottom:1px solid black">
-                        <h3>Forfait Occasionnelle</h3>
+                        <h3>Forfait Occasionnelle & Journalier</h3>
                     </div>
 
                     <p style="font-size: 0.8rem; font-weight: normal; margin-top: 4px;">
@@ -446,7 +449,8 @@ Accueil - EcoFlex
                 </div>
 
                 <div class="more-options">
-                    <span>→ Voir plus d’options</span>
+                    <a style="color: inherit; text-decoration: none;" href="{% url 'tarif' %}">→ En
+                        savoir plus</a>
                 </div>
             </div>
         </div>
@@ -454,11 +458,70 @@ Accueil - EcoFlex
         <div class="card">
             <span class="card-bg">V</span>
             <span class="card-text">Voiture</span>
+
+            <div class="card-expanded-content">
+                <h2 style="text-align: center;"><span class="light">Voiture</span> <span class="bold">Flex</span></h2>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Occasionnelle & Journalier</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Pour ceux qui utilisent une voiture occasionnellement sans abonnement fixe.
+                    </p>
+                </div>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Membre</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Idéal pour les utilisateurs fréquents qui veulent réduire les coûts à long terme.
+                    </p>
+                </div>
+
+
+                <div class="more-options">
+                    <a style="color: inherit; text-decoration: none;" href="{% url 'tarif' %}">→ En
+                        savoir plus</a>
+                </div>
+            </div>
         </div>
+
+
 
         <div class="card">
             <span class="card-bg">T</span>
             <span class="card-text">Trottinette</span>
+
+            <div class="card-expanded-content">
+                <h2 style="text-align: center;"><span class="light">Trottinette</span> <span class="bold">Flex</span>
+                </h2>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Occasionnelle & Journalier</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Parfait pour des trajets courts, spontanés et sans engagement.
+                    </p>
+                </div>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Membre</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Adapté aux utilisateurs réguliers qui veulent optimiser leurs déplacements urbains.
+                    </p>
+                </div>
+
+
+                <div class="more-options">
+                    <a style="color: inherit; text-decoration: none;" href="{% url 'tarif' %}">→ En
+                        savoir plus</a>
+                </div>
+            </div>
         </div>
 
     </div>

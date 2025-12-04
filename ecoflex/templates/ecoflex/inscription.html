@@ -3,85 +3,172 @@
 {% block title %}Accueil - EcoFlex{% endblock %}
 
 {% block content %}
-<div class="container" style="margin-top: 50px">
-  <div class="row align-items-center justify-content-center">
-    <div class="col-md-5 text-center mb-4 mb-md-0">
-      <div class="display-1 text-success mb-3">🌿</div>
-      <h1 class="display-2 fw-bold text-success" style="font-size: 4rem">
-        EcoFlex
-      </h1>
-      <p class="text-muted fs-5 mt-3">Votre solution écologique</p>
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="hero-section">
+      <div class="brand-mark">
+        <span class="brand-eco">Eco</span><span class="brand-flex">Flex</span>
+      </div>
+
+      <p class="brand-tagline">
+        Déplacez-vous librement,<br>durablement
+      </p>
     </div>
+    <div class="form-container">
 
-    <div class="col-md-5">
-      <div class="card shadow-lg border-0 rounded-4 p-4">
-        <h2 class="mb-4 text-center text-success">
-          <i class="bi bi-person-plus-fill"></i> Créer un compte
-        </h2>
+      <h2>Créer un compte</h2>
 
-        <form method="post" novalidate>
-          {% csrf_token %}
+      <form method="post" novalidate>
+        {% csrf_token %}
 
-          <div class="mb-3">
-            {{ form.username.label_tag }}<span style="color: red">*</span>
-            {{ form.username }}
-            {% if form.username.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.username.errors %}
-                  {{ error }}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+        <div class="mb-4">
+          <label>Nom d'utilisateur <span style="color:red">*</span></label>
+          {{ form.username }}
+          {% if form.username.errors %}
+          <div class="text-danger small">{{ form.username.errors }}</div>
+          {% endif %}
+        </div>
 
-          <div class="mb-3">
-            {{ form.email.label_tag }}<span style="color: red">*</span>
-            {{ form.email }}
-            {% if form.email.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.email.errors %}
-                  {{ error }}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+        <div class="mb-4">
+          <label>Email <span style="color:red">*</span></label>
+          {{ form.email }}
+          {% if form.email.errors %}
+          <div class="text-danger small">{{ form.email.errors }}</div>
+          {% endif %}
+        </div>
 
-          <div class="mb-3">
-            {{ form.password1.label_tag }}<span style="color: red">*</span>
-            {{ form.password1 }}
-            {% if form.password1.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.password1.errors %}
-                  {{ error }}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+        <div class="mb-4">
+          <label>Mot de passe <span style="color:red">*</span></label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+          <div class="text-danger small">{{ form.password1.errors }}</div>
+          {% endif %}
+        </div>
 
-          <div class="mb-3">
-            {{ form.password2.label_tag }}<span style="color: red">*</span>
-            {{ form.password2 }}
-            {% if form.password2.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.password2.errors %}
-                  {{ error }}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+        <div class="mb-4">
+          <label>Confirmer mot de passe <span style="color:red">*</span></label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+          <div class="text-danger small">{{ form.password2.errors }}</div>
+          {% endif %}
+        </div>
 
-          <button class="btn btn-success w-100 rounded-pill shadow-sm" type="submit">
-            <i class="bi bi-check2-circle"></i> S'inscrire
-          </button>
-        </form>
+        <button type="submit">S'inscrire</button>
+      </form>
 
-        <p class="mt-3 text-center">
-          <a href="{% url 'connexion' %}" class="text-decoration-none text-success">
-            Déjà un compte ? Se connecter
-          </a>
-        </p>
+      <div class="login-link">
+        Déjà un compte ? <a href="{% url 'connexion' %}">Connexion</a>
       </div>
     </div>
+
   </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    margin-right: 40px;
+  }
+
+  .brand-mark {
+    font-size: 13rem;
+    letter-spacing: 0.02em;
+    color: #202020;
+    line-height: 1.05;
+    position: relative;
+  }
+
+  .brand-eco {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .brand-flex {
+    font-weight: 800;
+  }
+
+  .brand-tagline {
+    font-style: italic;
+    color: #4a4a4a;
+
+    line-height: 1.45;
+    font-size: 2.5rem;
+    margin-top: 8px;
+    margin-left: 330px;
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 440px;
+    margin: 50px auto;
+    padding: 30px;
+  }
+
+  .form-container h2 {
+    text-align: center;
+    font-weight: 600;
+    font-size: 22px;
+    margin-bottom: 25px;
+    color: black;
+  }
+
+  .form-container label {
+    font-size: 14px;
+    font-weight: 700;
+    color: black;
+    display: block;
+    margin-bottom: 6px;
+
+  }
+
+  .form-container input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    background: #e0e0e0;
+    outline: none;
+  }
+
+  .form-container input:focus {
+    border-color: #888;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    background: black;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+  }
+
+  .form-container button:hover {
+    background: #ccc;
+    color: black;
+
+  }
+
+  .form-container .login-link {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .form-container .login-link a {
+    color: #0077cc;
+    text-decoration: none;
+  }
+</style>
 {% endblock %}

@@ -5,7 +5,7 @@ cards.forEach(card => {
         cards.forEach(c => c.classList.remove("expanded"));
         card.classList.add("expanded");
 
-        card.style.opacity = "1"; // celle-ci reste
+        card.style.opacity = "1";
     });
 
     card.addEventListener("mouseleave", () => {

@@ -6,10 +6,8 @@ function ouvrirModalLocation(stationId, stationNom, typeVehicule) {
     .then(r => r.json())
     .then(data => {
 
-        // 2. On met à jour les infos globales
         window.abonnementInfo = data;
 
-        // 3. On ouvre le modal APRES avoir obtenu les infos
         afficherModalLocation(stationId, stationNom, typeVehicule);
 
     })
