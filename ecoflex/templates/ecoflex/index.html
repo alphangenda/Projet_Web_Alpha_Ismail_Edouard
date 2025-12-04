@@ -133,6 +133,8 @@ Accueil - EcoFlex
         gap: 55px;
         justify-content: center;
         padding: 40px 0;
+        transition: all 0.4s ease;
+        width: 100%;
     }
 
     .card {
@@ -145,6 +147,8 @@ Accueil - EcoFlex
         justify-content: center;
         align-items: center;
         overflow: visible;
+        transition: all 0.4s ease;
+        flex-shrink: 1;
     }
 
     .card-bg {
@@ -166,6 +170,37 @@ Accueil - EcoFlex
         color: #202020;
 
     }
+
+
+
+    .card.expanded {
+        width: 65%;
+        justify-content: flex-start;
+
+        padding: 40px;
+    }
+
+    .card-expanded-content {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        z-index: 5;
+    }
+
+    .card-expanded-content h2 {
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+    }
+
+    .card.expanded .card-expanded-content {
+        display: flex;
+    }
+
+    .card:hover .card-text {
+        opacity: 0;
+    }
+
+
 
     .hero-phone-section {
         position: relative;
@@ -323,6 +358,8 @@ Accueil - EcoFlex
         justify-content: end;
         align-items: center;
     }
+
+    .more-options {}
 </style>
 {% endblock %}
 
@@ -373,7 +410,8 @@ Accueil - EcoFlex
         </div>
 
         <div class="fonctionnement-button">
-            <button>En savoir plus</button>
+            <button><a style="color: inherit; text-decoration: none;" href="{% url 'fonctionnement' %}">En savoir
+                    plus</a></button>
         </div>
 
     </div>
@@ -388,16 +426,102 @@ Accueil - EcoFlex
         <div class="card">
             <span class="card-bg">V</span>
             <span class="card-text">Vélo</span>
+
+            <div class="card-expanded-content">
+                <h2 style="text-align: center;"><span class="light">Vélo</span> <span class="bold">Flex</span></h2>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Occasionnelle & Journalier</h3>
+                    </div>
+
+                    <p style="font-size: 0.8rem; font-weight: normal; margin-top: 4px;">
+                        Idéal pour les utilisateurs qui souhaitent une flexibilité totale sans engagement.
+                    </p>
+                </div>
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Membre</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; font-weight: normal; margin-top: 4px;">
+                        Parfait pour les utilisateurs réguliers qui veulent économiser sur chaque trajet.
+                    </p>
+                </div>
+
+                <div class="more-options">
+                    <a style="color: inherit; text-decoration: none;" href="{% url 'tarif' %}">→ En
+                        savoir plus</a>
+                </div>
+            </div>
         </div>
 
         <div class="card">
             <span class="card-bg">V</span>
             <span class="card-text">Voiture</span>
+
+            <div class="card-expanded-content">
+                <h2 style="text-align: center;"><span class="light">Voiture</span> <span class="bold">Flex</span></h2>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Occasionnelle & Journalier</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Pour ceux qui utilisent une voiture occasionnellement sans abonnement fixe.
+                    </p>
+                </div>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Membre</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Idéal pour les utilisateurs fréquents qui veulent réduire les coûts à long terme.
+                    </p>
+                </div>
+
+
+                <div class="more-options">
+                    <a style="color: inherit; text-decoration: none;" href="{% url 'tarif' %}">→ En
+                        savoir plus</a>
+                </div>
+            </div>
         </div>
+
+
 
         <div class="card">
             <span class="card-bg">T</span>
             <span class="card-text">Trottinette</span>
+
+            <div class="card-expanded-content">
+                <h2 style="text-align: center;"><span class="light">Trottinette</span> <span class="bold">Flex</span>
+                </h2>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Occasionnelle & Journalier</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Parfait pour des trajets courts, spontanés et sans engagement.
+                    </p>
+                </div>
+
+                <div class="option">
+                    <div style="border-bottom:1px solid black">
+                        <h3>Forfait Membre</h3>
+                    </div>
+                    <p style="font-size: 0.8rem; margin-top: 4px;">
+                        Adapté aux utilisateurs réguliers qui veulent optimiser leurs déplacements urbains.
+                    </p>
+                </div>
+
+
+                <div class="more-options">
+                    <a style="color: inherit; text-decoration: none;" href="{% url 'tarif' %}">→ En
+                        savoir plus</a>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -411,10 +535,15 @@ Accueil - EcoFlex
             <span class="">commence sur la</span>
             <span class="">carte</span>
         </div>
-        <div class="big-card"></div>
+        <div class="big-card">
+            <img src="{% static 'ecoflex/images/map_mockup.png' %}" alt="map"
+                style="width:100%; height:100%; border-radius:30px; object-fit: cover; border: 8px solid #000;">
+        </div>
 
         <div class="cta-btn">
-            <button>En savoir plus sur votre trajet</button>
+            <button><a style="color: inherit; text-decoration: none;" href="{% url 'map_location' %}">En savoir plus sur
+                    votre
+                    trajet</a></button>
         </div>
 
     </div>
@@ -488,4 +617,8 @@ Accueil - EcoFlex
 
 </div>
 
+{% endblock %}
+{% block extra_js %}
+
+<script src="{% static 'ecoflex/js/accueil_cards_tarif.js' %}"></script>
 {% endblock %}

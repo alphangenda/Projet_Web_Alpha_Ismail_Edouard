@@ -42,11 +42,12 @@ def map_location(request):
     return render(request, 'ecoflex/map_location.html')
 
 @login_required
-def api_abonnement_actif(request):
-    """
-    Retourne l'abonnement actif de l'utilisateur s'il existe.
-    """
-    abo = request.user.abonnement_actif()
+def api_abonnement_actif(request, vehicule):
+
+    abo = request.user.abonnements.filter(
+        actif=True,
+        offre__vehicule=vehicule
+    ).order_by('-date_debut').first()
 
     if not abo:
         return JsonResponse({"has": False})
@@ -74,7 +75,8 @@ def activer_abonnement(request, vehicule, type):
 
     AbonnementUtilisateur.objects.filter(
         utilisateur=request.user,
-        actif=True
+        actif=True,
+        offre__vehicule=vehicule
     ).update(actif=False, date_fin=timezone.now())
 
     abo = AbonnementUtilisateur.objects.create(

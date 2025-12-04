@@ -149,20 +149,7 @@
 <script>
     window.utilisateurConnecte = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
 </script>
-<script>
-    window.abonnementInfo = { has: false };
 
-
-    fetch("{% url 'api_abonnement_actif' %}")
-        .then(r => r.json())
-        .then(data => {
-            window.abonnementInfo = data;
-        })
-        .catch(() => {
-            window.abonnementInfo = { has: false };
-        });
-
-</script>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -175,4 +162,5 @@
 
 
 <script src="{% static 'ecoflex/js/recherche_ajax.js' %}"></script>
+
 {% endblock %}
