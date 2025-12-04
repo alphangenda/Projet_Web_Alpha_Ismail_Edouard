@@ -35,7 +35,6 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-outline-primary">Voir profil</a>
                                         {% if user_item.is_active %}
                                         <a href="#" class="btn btn-sm btn-warning"
                                             onclick="confirmerChangementStatut(event, '{% url 'action_status' user_item.id %}', 'désactiver'); return false;">
