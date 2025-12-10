@@ -124,10 +124,8 @@ Accueil - EcoFlex
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    /* Effet grossissant */
     .fonctionnement-button button:hover {
         transform: scale(1.08);
-        /* Taille augmentée */
         box-shadow: 0 6px 18px rgba(19, 94, 12, 0.5);
     }
 
@@ -250,15 +248,30 @@ Accueil - EcoFlex
 
     .cta-btn {
         margin-top: 18px;
+        position: relative;
+        z-index: 5;
+
     }
 
-    .cta-btn button {
-        background: #bfbfbf;
+    .cta-btn a {
+        position: relative;
+        z-index: 10;
+        display: inline-block;
         padding: 14px 28px;
         border: none;
         border-radius: 14px;
         cursor: pointer;
         font-size: 1rem;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        box-shadow: 0 4px 12px rgba(19, 94, 12, 0.966);
+        color: #fff;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    }
+
+    .cta-btn a:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 18px rgba(19, 94, 12, 0.5);
     }
 
     .map-text {
@@ -374,6 +387,8 @@ Accueil - EcoFlex
         display: flex;
         justify-content: end;
         align-items: center;
+        color: rgba(19, 94, 12, 0.966);
+
     }
 </style>
 
@@ -435,11 +450,18 @@ Accueil - EcoFlex
 
     .faq-plus {
         font-size: 2rem;
-        font-weight: 300;
+        font-weight: 500;
         color: #202020;
         transition: transform 0.3s ease;
         min-width: 30px;
         text-align: center;
+
+    }
+
+    .faq-plus:hover {
+        transform: scale(1.8);
+        filter: drop-shadow(0 0 10px rgba(32, 201, 151, 0.9));
+        cursor: pointer;
     }
 
     .faq-item.active .faq-plus {
@@ -681,10 +703,12 @@ Accueil - EcoFlex
         </div>
 
         <div class="cta-btn">
-            <button><a style="color: inherit; text-decoration: none;" href="{% url 'map_location' %}">En savoir plus sur
-                    votre
-                    trajet</a></button>
+            <a style="color: inherit; text-decoration: none;" href="{% url 'map_location' %}">En savoir plus sur
+                votre
+                trajet</a>
         </div>
+
+
 
     </div>
 
