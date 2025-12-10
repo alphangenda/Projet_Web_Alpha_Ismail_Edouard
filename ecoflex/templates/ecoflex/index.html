@@ -110,15 +110,32 @@ Accueil - EcoFlex
     .fonctionnement-button {
         grid-column: 1 / 3;
         text-align: center;
+        transition: all 0.3s ease;
     }
 
     .fonctionnement-button button {
-        background: #bfbfbf;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        box-shadow: 0 4px 12px rgba(19, 94, 12, 0.966);
+        color: #fff;
         border: none;
         padding: 10px 22px;
         border-radius: 10px;
         cursor: pointer;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
+
+    /* Effet grossissant */
+    .fonctionnement-button button:hover {
+        transform: scale(1.08);
+        /* Taille augmentée */
+        box-shadow: 0 6px 18px rgba(19, 94, 12, 0.5);
+    }
+
+
+
+
+
+
 
     .tarif-text {
         display: flex;
