@@ -2,6 +2,159 @@
 {% load static %}
 {% block title %}Gestion des utilisateurs - EcoFlex{% endblock %}
 
+{% block extra_css %}
+<style>
+    .card {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+    }
+
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    /* --- HEADER --- */
+    .card-header {
+        border-radius: 18px 18px 0 0 !important;
+        padding: 25px;
+        background: linear-gradient(135deg, #ffcc00, #ffdd44);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .card-header h3 {
+        border-bottom: none;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header p {
+        margin: 4px 0 0;
+        font-size: 0.95rem;
+        color: #4a5568;
+        line-height: 1.6;
+    }
+
+
+    /* --- TABLE --- */
+    .table {
+        margin-top: 15px;
+        border-collapse: separate !important;
+        border-spacing: 0 8px !important;
+    }
+
+    .table thead th {
+        border-bottom: none;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #0f172a;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 14px;
+        gap: 4px;
+    }
+
+    .table tbody tr {
+
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        border-radius: 24px;
+        transition: all .2s ease;
+    }
+
+
+    .table tbody tr:hover {
+        border-color: #28a745;
+        box-shadow: 0 0 14px rgba(40, 167, 69, 0.5);
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        transform: translateY(-2px);
+    }
+
+    .table td {
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        backdrop-filter: blur(8px);
+        padding: 14px 16px;
+        vertical-align: middle;
+        font-size: 15px;
+        color: #1e293b;
+    }
+
+    /* --- BADGES UTILISATEURS --- */
+    .badge {
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 12px;
+    }
+
+    .bg-success {
+        background: #28a745 !important;
+    }
+
+    .bg-secondary {
+        background: #6c757d !important;
+    }
+
+    /* --- BOUTONS ACTIONS --- */
+    .btn-sm {
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all .25s ease;
+    }
+
+    .btn-warning {
+        background: #ffcc00 !important;
+        color: #111 !important;
+        border: none;
+    }
+
+    .btn-warning:hover {
+        background: #ffdd33 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 200, 0, 0.4);
+    }
+
+    .btn-success {
+        background: #28a745 !important;
+        color: white !important;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background: #1e8b39 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+    }
+
+    /* --- ALERTES --- */
+    .alert-info {
+        margin-top: 25px;
+        background: rgba(209, 236, 241, 0.7);
+        border: 1px solid #bfe0e8;
+        border-radius: 14px;
+        padding: 15px 18px;
+        color: #0c5460;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 576px) {
+        .card-header h3 {
+            font-size: 20px;
+        }
+
+        .table td {
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <div class="row">
