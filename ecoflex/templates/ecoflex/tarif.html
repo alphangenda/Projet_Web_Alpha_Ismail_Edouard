@@ -1,37 +1,70 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Tarif - EcoFlex{% endblock %}
 
 {% block content %}
 <div class="container mt-5 gap-0">
-    <h1>Tarif - EcoFlex</h1>
+
 
     <h2 class="titreVelo">Vélo</h2>
     <section class="servicesVelo">
+
+
         <div class="card">
-            <div class="card-header">
-                <h3>Occasionnel & Journalier</h3>
+            <div class="card-header d-flex justify-content-center mb-3 align-items-center">
+                <div class="type-switch" id="switch-tarif">
+                    <button class="type-btn active" data-target="tarif-occasionnel">Occasionnel</button>
+                    <button class="type-btn" data-target="tarif-journalier">Journalier</button>
+                </div>
+            </div>
+
+            <div id="tarif-occasionnel" class="tarif-bloc">
                 <div class="price-block">
                     <span class="price">1,00 $</span>
                     <span class="unit">/ déverrouillage</span>
                 </div>
+
+                <div class="card-body">
+                    <p class="plan-type"><strong>Occasionnel :</strong></p>
+                    <ul class="features">
+                        <li>Frais de déverrouillage : 1,00 $</li>
+                        <li>0,33 $ / minute</li>
+                        <li>Dépôt remboursable de 100 $ / vélo</li>
+                        <li>Taxes incluses</li>
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'velo' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
+                        class="btn-order">
+                        Choisir ce forfait →
+                    </a>
+                </div>
             </div>
 
-            <div class="card-body">
-                <p class="plan-type"><strong>Journalier :</strong> 19,00 $ / 24 h</p>
-                <ul class="features">
-                    <li>Trajets illimités de 45 minutes</li>
-                    <li>+ 0,33 $ / minute après 45 minutes</li>
-                    <li>Dépôt remboursable de 100 $ / vélo</li>
-                    <li>Taxes incluses</li>
-                </ul>
-            </div>
+            <div id="tarif-journalier" class="tarif-bloc" style="display: none;">
+                <div class="price-block">
+                    <span class="price">19,00 $</span>
+                    <span class="unit">/ 24 h</span>
+                </div>
 
-            <div class="card-footer">
-                <a href="{% if user.is_authenticated %} {% url 'activer_abonnement' 'velo' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
-                    class="btn-order">
-                    Choisir ce forfait →
-                </a>
+                <div class="card-body">
+                    <p class="plan-type"><strong>Journalier :</strong></p>
+                    <ul class="features">
+                        <li>Trajets illimités de 45 minutes</li>
+                        <li>+ 0,33 $ / minute après 45 minutes</li>
+                        <li>Dépôt remboursable de 100 $ / vélo</li>
+                        <li>Taxes incluses</li>
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'velo' 'journalier' %}{% else %}{% url 'connexion' %}{% endif %}"
+                        class="btn-order">
+                        Choisir ce forfait →
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -92,29 +125,59 @@
     <h2 class="titreTrotinette"><span>Trotti</span><br><span>nette</span></h2>
     <section class="servicesTrotinette">
         <div class="card">
-            <div class="card-header">
-                <h3>Occasionnel & Journalier</h3>
+            <div class="card-header d-flex justify-content-center mb-3 align-items-center">
+                <div class="type-switch" id="switch-tarif-trottinette">
+                    <button class="type-btn active" data-target="tarif-trottinette-occasionnel">Occasionnel</button>
+                    <button class="type-btn" data-target="tarif-trottinette-journalier">Journalier</button>
+                </div>
+            </div>
+
+            <div id="tarif-trottinette-occasionnel" class="tarif-bloc">
                 <div class="price-block">
                     <span class="price">1,25 $</span>
                     <span class="unit">/ déverrouillage</span>
                 </div>
+
+                <div class="card-body">
+                    <p class="plan-type"><strong>Occasionnel :</strong></p>
+                    <ul class="features">
+                        <li>Frais de déverrouillage : 1,25 $</li>
+                        <li>0,39 $ / minute</li>
+                        <li>Dépôt remboursable de 100 $ / trottinette</li>
+                        <li>Taxes incluses</li>
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'trottinette' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
+                        class="btn-order">
+                        Choisir ce forfait →
+                    </a>
+                </div>
             </div>
 
-            <div class="card-body">
-                <p class="plan-type"><strong>Journalier :</strong> 22,00 $ / 24 h</p>
-                <ul class="features">
-                    <li>Trajets illimités de 30 minutes</li>
-                    <li>+ 0,39 $ / minute après 30 minutes</li>
-                    <li>Dépôt remboursable de 100 $ / trottinette</li>
-                    <li>Taxes incluses</li>
-                </ul>
-            </div>
+            <div id="tarif-trottinette-journalier" class="tarif-bloc" style="display: none;">
+                <div class="price-block">
+                    <span class="price">22,00 $</span>
+                    <span class="unit">/ 24 h</span>
+                </div>
 
-            <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'trottinette' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
-                    class="btn-order">
-                    Choisir ce forfait →
-                </a>
+                <div class="card-body">
+                    <p class="plan-type"><strong>Journalier :</strong></p>
+                    <ul class="features">
+                        <li>Trajets illimités de 30 minutes</li>
+                        <li>+ 0,39 $ / minute après 30 minutes</li>
+                        <li>Dépôt remboursable de 100 $ / trottinette</li>
+                        <li>Taxes incluses</li>
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'trottinette' 'journalier' %}{% else %}{% url 'connexion' %}{% endif %}"
+                        class="btn-order">
+                        Choisir ce forfait →
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -178,29 +241,61 @@
     <h2 class="titreVoiture">Voiture</h2>
     <section class="servicesVoiture">
         <div class="card">
-            <div class="card-header">
-                <h3>Occasionnel & Journalier</h3>
+            <div class="card-header d-flex justify-content-center mb-3 align-items-center">
+                <div class="type-switch" id="switch-tarif-voiture">
+                    <button class="type-btn active" data-target="tarif-voiture-occasionnel">Occasionnel</button>
+                    <button class="type-btn" data-target="tarif-voiture-journalier">Journalier</button>
+                </div>
+            </div>
+
+            <div id="tarif-voiture-occasionnel" class="tarif-bloc">
                 <div class="price-block">
                     <span class="price">14,00 $</span>
                     <span class="unit">/ heure</span>
                 </div>
+
+                <div class="card-body">
+                    <p class="plan-type"><strong>Occasionnel :</strong></p>
+                    <ul class="features">
+                        <li>Tarif horaire : 14,00 $</li>
+                        <li>Recharge incluse sur les bornes partenaires</li>
+                        <li>Assurance de base incluse</li>
+                        <li>Limite de 150 km / jour (0,30 $ / km sup.)</li>
+                        <li>Taxes incluses</li>
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'voiture' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
+                        class="btn-order">
+                        Choisir ce forfait →
+                    </a>
+                </div>
             </div>
 
-            <div class="card-body">
-                <p class="plan-type"><strong>Journalier :</strong> 60,00 $ / jour</p>
-                <ul class="features">
-                    <li>Recharge incluse sur les bornes partenaires</li>
-                    <li>Assurance de base incluse</li>
-                    <li>Limite de 200 km / jour (0,30 $ / km sup.)</li>
-                    <li>Taxes incluses</li>
-                </ul>
-            </div>
+            <div id="tarif-voiture-journalier" class="tarif-bloc" style="display: none;">
+                <div class="price-block">
+                    <span class="price">60,00 $</span>
+                    <span class="unit">/ jour</span>
+                </div>
 
-            <div class="card-footer">
-                <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'voiture' 'occasionnel' %}{% else %}{% url 'connexion' %}{% endif %}"
-                    class="btn-order">
-                    Choisir ce forfait →
-                </a>
+                <div class="card-body">
+                    <p class="plan-type"><strong>Journalier :</strong></p>
+                    <ul class="features">
+                        <li>Forfait 24 heures : 60,00 $</li>
+                        <li>Recharge incluse sur les bornes partenaires</li>
+                        <li>Assurance de base incluse</li>
+                        <li>Limite de 200 km / jour (0,30 $ / km sup.)</li>
+                        <li>Taxes incluses</li>
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% if user.is_authenticated %}{% url 'activer_abonnement' 'voiture' 'journalier' %}{% else %}{% url 'connexion' %}{% endif %}"
+                        class="btn-order">
+                        Choisir ce forfait →
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -260,7 +355,43 @@
     </section>
 </div>
 
+{% endblock %}
 
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const allSwitches = document.querySelectorAll('.type-switch');
+
+        allSwitches.forEach(switchElement => {
+            const buttons = switchElement.querySelectorAll('.type-btn');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    buttons.forEach(b => b.classList.remove('active'));
+
+                    btn.classList.add('active');
+
+                    const card = switchElement.closest('.card');
+
+                    card.querySelectorAll('.tarif-bloc')
+                        .forEach(bloc => bloc.style.display = 'none');
+
+                    const targetId = btn.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        targetElement.style.display = 'block';
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block extra_css %}
 <style>
     body {
         background: radial-gradient(circle at 25% 25%, #fafafa, #ffffff);
@@ -322,6 +453,36 @@
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
         transition: all 0.3s ease;
     }
+
+    .type-switch {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px;
+        border-radius: 999px;
+        background: #111;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .type-btn {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        padding: 8px 20px;
+        border-radius: 999px;
+        background: transparent;
+        color: #f5f5f5;
+        font-size: 0.9rem;
+        font-weight: 500;
+        width: 50%;
+    }
+
+    .type-btn.active {
+        background: #fff;
+        color: #111;
+    }
+
 
 
 
@@ -434,9 +595,9 @@
 
 
     .btn-order {
-        background: none;
-        border: 1.5px solid #0f172a;
-        color: #0f172a;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        box-shadow: 0 4px 12px rgba(19, 94, 12, 0.966);
+        color: #fff;
         border-radius: 9999px;
         padding: 0.75rem 1.5rem;
         font-weight: 500;
@@ -446,10 +607,11 @@
     }
 
     .btn-order:hover {
-        background: #0f172a;
-        color: #fff;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         letter-spacing: 0.5px;
     }
+
+
 
     @media (max-width: 768px) {
         .card {

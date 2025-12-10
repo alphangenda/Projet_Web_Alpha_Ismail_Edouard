@@ -2,12 +2,7 @@
 {% block title %}Réserver une voiture - EcoFlex{% endblock %}
 {% block content %}
 <div class="container">
-    <div class="page-header">
-        <div class="brand-mark-small">
-            <span class="brand-eco">Eco</span><span class="brand-flex">Flex</span>
-        </div>
-        <p class="page-subtitle">Gérez vos réservations en toute simplicité</p>
-    </div>
+
 
     <div class="row justify-content-center g-4">
         <div class="col-lg-6">
@@ -18,22 +13,22 @@
                     {% csrf_token %}
 
                     {% if reservation_form.non_field_errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {% for error in reservation_form.non_field_errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in reservation_form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
                     {% endif %}
 
                     <div class="form-group">
                         <label>{{ reservation_form.station.label }}<span class="required">*</span></label>
                         {{ reservation_form.station }}
                         {% if reservation_form.station.errors %}
-                            <div class="error-message">
-                                {% for error in reservation_form.station.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                        <div class="error-message">
+                            {% for error in reservation_form.station.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
 
@@ -41,11 +36,11 @@
                         <label>{{ reservation_form.date_reservation.label }}<span class="required">*</span></label>
                         {{ reservation_form.date_reservation }}
                         {% if reservation_form.date_reservation.errors %}
-                            <div class="error-message">
-                                {% for error in reservation_form.date_reservation.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                        <div class="error-message">
+                            {% for error in reservation_form.date_reservation.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
 
@@ -53,11 +48,11 @@
                         <label>{{ reservation_form.heure_debut.label }}<span class="required">*</span></label>
                         {{ reservation_form.heure_debut }}
                         {% if reservation_form.heure_debut.errors %}
-                            <div class="error-message">
-                                {% for error in reservation_form.heure_debut.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                        <div class="error-message">
+                            {% for error in reservation_form.heure_debut.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
 
@@ -65,11 +60,11 @@
                         <label>{{ reservation_form.heure_fin.label }}<span class="required">*</span></label>
                         {{ reservation_form.heure_fin }}
                         {% if reservation_form.heure_fin.errors %}
-                            <div class="error-message">
-                                {% for error in reservation_form.heure_fin.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                        <div class="error-message">
+                            {% for error in reservation_form.heure_fin.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
 
@@ -93,47 +88,47 @@
                     {% csrf_token %}
 
                     {% if annulation_form.non_field_errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {% for error in annulation_form.non_field_errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in annulation_form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
                     {% endif %}
 
                     {% if annulation_form.reservation.field.queryset.count > 0 %}
-                        <div class="form-group">
-                            <label>{{ annulation_form.reservation.label }}<span class="required">*</span></label>
-                            {{ annulation_form.reservation }}
-                            {% if annulation_form.reservation.errors %}
-                                <div class="error-message">
-                                    {% for error in annulation_form.reservation.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                    <div class="form-group">
+                        <label>{{ annulation_form.reservation.label }}<span class="required">*</span></label>
+                        {{ annulation_form.reservation }}
+                        {% if annulation_form.reservation.errors %}
+                        <div class="error-message">
+                            {% for error in annulation_form.reservation.errors %}
+                            {{ error }}
+                            {% endfor %}
                         </div>
+                        {% endif %}
+                    </div>
 
-                        <div class="warning-box">
-                            <strong>Attention :</strong> L'annulation de votre réservation est définitive.
-                        </div>
+                    <div class="warning-box">
+                        <strong>Attention :</strong> L'annulation de votre réservation est définitive.
+                    </div>
 
-                        <div class="button-group">
-                            <button type="submit" name="annuler" class="btn-danger">
-                                Confirmer l'annulation
-                            </button>
-                            <a href="{% url 'map_location' %}" class="btn-secondary">
-                                Retour à la carte
-                            </a>
-                        </div>
+                    <div class="button-group">
+                        <button type="submit" name="annuler" class="btn-danger">
+                            Confirmer l'annulation
+                        </button>
+                        <a href="{% url 'map_location' %}" class="btn-secondary">
+                            Retour à la carte
+                        </a>
+                    </div>
                     {% else %}
-                        <div class="info-box">
-                            Vous n'avez aucune réservation active à annuler.
-                        </div>
-                        <div class="button-group">
-                            <a href="{% url 'map_location' %}" class="btn-secondary full-width">
-                                Retour à la carte
-                            </a>
-                        </div>
+                    <div class="info-box">
+                        Vous n'avez aucune réservation active à annuler.
+                    </div>
+                    <div class="button-group">
+                        <a href="{% url 'map_location' %}" class="btn-secondary full-width">
+                            Retour à la carte
+                        </a>
+                    </div>
                     {% endif %}
                 </form>
             </div>
@@ -144,12 +139,6 @@
 
 {% block extra_css %}
 <style>
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 40px 20px;
-    }
-
     .page-header {
         text-align: center;
         margin-bottom: 50px;

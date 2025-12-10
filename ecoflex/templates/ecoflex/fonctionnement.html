@@ -1,347 +1,560 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Fonctionnement - EcoFlex{% endblock %}
 
+{% block extra_css %}
+<style>
+    .step {
+        position: relative;
+    }
+
+    .step::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-right: 2px dotted #d3d3d3;
+    }
+
+    .step-first::before {
+        top: 50%;
+    }
+
+    .step-last::before {
+        bottom: 50%;
+    }
+
+    .step-circle {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: #001;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+
+    .step-circle:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 25px 50px rgba(102, 126, 234, 0.6);
+    }
+
+
+    .step-title {
+        color: #2d3748;
+        font-weight: 800;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .step-content {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+    }
+
+    .step-content:hover {
+        transform: translateY(-5px);
+    }
+
+    .step-content:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border-radius: 12px;
+        transition: background 0.2s ease;
+    }
+
+    .feature-item:hover {
+        background: rgba(4, 39, 196, 0.06);
+
+    }
+
+    .feature-text {
+        font-size: 0.95rem;
+        color: #4a5568;
+        line-height: 1.6;
+    }
+
+    .action-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 12px rgba(19, 94, 12, 0.966);
+    }
+
+    .action-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(32, 201, 151, 0.5);
+        color: white;
+    }
+
+
+
+
+
+    .step-desc {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+
+    .badge {
+        height: auto;
+        font-size: 15rem;
+        font-weight: 900;
+    }
+
+
+
+    .type-switch {
+        width: 25%;
+        display: flex;
+        justify-content: space-between;
+        padding: 4px;
+        border-radius: 999px;
+        background: #111;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .type-btn {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        padding: 8px 20px;
+        border-radius: 999px;
+        background: transparent;
+        color: #f5f5f5;
+        font-size: 0.9rem;
+        font-weight: 500;
+        width: 33.3333333333%;
+    }
+
+    .type-btn.active {
+        background: #fff;
+        color: #111;
+    }
+
+    @media (max-width: 768px) {
+        .step::before {
+            content: none;
+        }
+
+        .step-circle {
+            width: 140px;
+            height: 140px;
+        }
+
+        .type-switch {
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-    <div class="container mt-5 gap-0">
 
-        <div class="mb-4">
-            <label for="choix-fonctionnement"><strong>Choisissez votre mode :</strong></label>
-            <select id="choix-fonctionnement" class="form-select" style="width: 250px; display: inline-block;">
-                <option value="velo" selected>Vélo</option>
-                <option value="trottinette">Trottinette</option>
-                <option value="voiture">Voiture</option>
-            </select>
+<div class="container my-5">
+
+    <div class="d-flex justify-content-center mb-4">
+        <div class="type-switch">
+            <button class="type-btn active" data-target="bloc-velo">Vélo</button>
+            <button class="type-btn" data-target="bloc-trottinette">Trottinette</button>
+            <button class="type-btn" data-target="bloc-voiture">Voiture</button>
         </div>
-
-        <div id="bloc-velo" class="bloc-fonctionnement">
-            <div style="display: grid; grid-template-rows: auto auto auto; margin: 20px;">
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px;">
-                        <h3>Achetez</h3>
-                        <ul>
-                            <li>Ouvrez la version mobile du site ou l’application.</li>
-                            <li>Consultez la carte pour repérer un vélo disponible proche de vous.</li>
-                        </ul>
-                        <p>Puis, connectez-vous à votre compte ou inscrivez-vous :</p>
-                        <ul>
-                            <li><a href="{% url 'connexion' %}">Mon compte</a></li>
-                            <li><a href="{% url 'inscription' %}">S'inscrire</a></li>
-                        </ul>
-                        <p>Enfin, choisissez un forfait : <a href="{% url 'tarif' %}">La tarification</a></p>
-                    </div>
-
-                    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-
-                        {% load static %}
-                        <span style="font-size: 200px; font-weight: bold; line-height: 1;">
-                            01
-                        </span>
-                        <img style="border-radius: 8px; margin-right: 40px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Roulez et rapportez" >
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Roulez et rapportez">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px; display: flex; justify-content: center; align-items: center;">
-                        {% load static %}
-                        <img style="border-radius: 8px"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Roulez et rapportez" >
-                    </div>
-                    <div style=" padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-size: 200px; font-weight: bold; line-height: 1; margin-right: 20px;">
-                            02
-                            </span>
-                        </div>
-                        <div style="padding: 20px;">
-                            <h2>Déverrouillez</h2>
-                            <p>Approchez-vous du vélo de votre choix.</p>
-                            <p><strong>Deux manières de déverrouiller votre vélo :</strong></p>
-                            <ul>
-                                <li>Entrer le code de votre carte membre à 5 chiffres sur le clavier de la borne</li>
-                                <li>Scanner votre carte membre ajoutée à votre compte</li>
-                            </ul>
-                            <p>Retirez le vélo lorsque la lumière verte s’allume.</p>
-                            <p>Un problème technique ? Consultez la <a href="#">FAQ</a>.</p>
-                        </div>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px;">
-                        <h2>Roulez</h2>
-                        <p>Le compteur se met en marche dès le début du trajet !</p>
-                        <ul>
-                            <li>Roulez en toute sécurité, n’oubliez pas votre casque.</li>
-                            <li><a href="#">Règles de sécurité</a></li>
-                            <li>Profitez des pistes cyclables et des voies partagées.</li>
-                        </ul>
-                        <p>Vous avez un arrêt : utiliser le cadenas disponible en avant du vélo.</p>
-                    </div>
-                    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        {% load static %}
-                        <span style="font-size: 200px; font-weight: bold; margin-right: 20px; line-height: 1;">
-                            03
-                        </span>
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Roulez et rapportez">
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 35% 65%;">
-                    <div style="padding: 20px; display: flex; justify-content: center; align-items: center;">
-                        {% load static %}
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Roulez et rapportez">
-                    </div>
-                    <div style=" padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-size: 200px; font-weight: bold; line-height: 1; margin-right: 20px;">
-                            04
-                            </span>
-                        </div>
-                        <div style="padding: 20px;">
-                            <h2>Rapportez</h2>
-                            <ul>
-                                <li>Vérifiez la disponibilité des ancrages via l’application ou le site web mobile</li>
-                                <li>Insérez le vélo dans l’ancrage</li>
-                                <li>Attendez la lumière verte pour confirmer la fin du trajet</li>
-                                <li>Assurez-vous qu’il soit bien verrouillé</li>
-                            </ul>
-                            <h4>Station pleine ou indisponible ?</h4>
-                            <p>Dirigez-vous vers un autre emplacement proche, indiqué sur la carte.</p>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="bloc-trottinette" class="bloc-fonctionnement" style="display: none;">
-            <div style="display: grid; grid-template-rows: auto auto auto; margin: 20px;">
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px;">
-                        <h3>Achetez</h3>
-                        <ul>
-                            <li>Ouvrez la version mobile du site ou l’application.</li>
-                            <li>Consultez la carte pour repérer une trottinette disponible proche de vous.</li>
-                        </ul>
-                        <p>Puis, connectez-vous à votre compte ou inscrivez-vous :</p>
-                        <ul>
-                            <li><a href="#">Mon compte</a></li>
-                            <li><a href="#">S'inscrire</a></li>
-                        </ul>
-                        <p>Enfin, choisissez un forfait : <a href="#">La tarification</a></p>
-                    </div>
-
-                    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        {% load static %}
-                        <span style="font-size: 200px; font-weight: bold; line-height: 1;">
-                            01
-                        </span>
-                        <img style="border-radius: 8px; margin-right: 40px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Achetez">
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Achetez">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px; display: flex; justify-content: center; align-items: center;">
-                        {% load static %}
-                        <img style="border-radius: 8px"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Déverrouillez">
-                    </div>
-                    <div style=" padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-size: 200px; font-weight: bold; line-height: 1; margin-right: 20px;">
-                            02
-                            </span>
-                        </div>
-                        <div style="padding: 20px;">
-                            <h2>Déverrouillez</h2>
-                            <p>Approchez-vous de la trottinette de votre choix.</p>
-                            <p><strong>Trois manières de la déverrouiller :</strong></p>
-                            <ul>
-                                <li>Entrer le code de votre carte membre à 5 chiffres sur l’interface</li>
-                                <li>Scanner votre carte membre ajoutée à votre compte</li>
-                            </ul>
-                            <p><em>Sécurité :</em> La trottinette est verrouillée tant qu’elle n’est pas déverrouillée.</p>
-                            <ul>
-                                <li>Si elle est déplacée sans déverrouillage → un signal sonore se déclenche.</li>
-                                <li>Si quelqu’un tente de rouler verrouillée → bruit d’alerte immédiat.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px;">
-                        <h2>Roulez</h2>
-                        <p>Le compteur démarre dès que vous commencez votre trajet !</p>
-                        <ul>
-                            <li>Roulez prudemment, respectez le code de la route et portez un casque.</li>
-                            <li><a href="#">Règles de sécurité</a></li>
-                            <li>Privilégiez les pistes cyclables et les voies partagées.</li>
-                        </ul>
-                        <p>Vous avez un arrêt : utilisez la béquille pour stationner correctement la trottinette.</p>
-                    </div>
-                    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        {% load static %}
-                        <span style="font-size: 200px; font-weight: bold; margin-right: 20px; line-height: 1;">
-                            03
-                        </span>
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Roulez">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 35% 65%;">
-                    <div style="padding: 20px; display: flex; justify-content: center; align-items: center;">
-                        {% load static %}
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Rapportez">
-                    </div>
-                    <div style=" padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-size: 200px; font-weight: bold; line-height: 1; margin-right: 20px;">
-                            04
-                            </span>
-                        </div>
-                        <div style="padding: 20px;">
-                            <h2>Rapportez</h2>
-                            <ul>
-                                <li>Consultez la carte pour trouver une zone de stationnement autorisée.</li>
-                                <li>Garez la trottinette correctement dans un espace prévu.</li>
-                                <li>Terminez votre trajet dans l’application → une lumière/notification confirme la fin.</li>
-                            </ul>
-                            <h4>Station pleine ou indisponible ?</h4>
-                            <p>Dirigez-vous vers un autre emplacement proche, indiqué sur la carte.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="bloc-voiture" class="bloc-fonctionnement" style="display: none;">
-            <div style="display: grid; grid-template-rows: auto auto auto auto; margin: 20px;">
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px;">
-                        <h3>Achetez</h3>
-                        <ul>
-                            <li>Ouvrez la version mobile du site ou l’application.</li>
-                            <li>Consultez la carte pour repérer une voiture disponible proche de vous.</li>
-                        </ul>
-                        <p>Puis connectez-vous à votre compte ou inscrivez-vous : </p>
-                        <ul>
-                            <li><a href="#">Mon compte</a></li>
-                            <li><a href="#">S'inscrire</a></li>
-                        </ul>
-                        <p>Enfin, choisissez un forfait : <a href="#">La tarification</a></p>
-                    </div>
-
-                    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        {% load static %}
-                        <span style="font-size: 200px; font-weight: bold; line-height: 1;">
-                            01
-                        </span>
-                        <img style="border-radius: 8px; margin-right: 40px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Achetez">
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Achetez">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px; display: flex; justify-content: center; align-items: center;">
-                        {% load static %}
-                        <img style="border-radius: 8px"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Déverrouillez">
-                    </div>
-                    <div style=" padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-size: 200px; font-weight: bold; line-height: 1; margin-right: 20px;">
-                            02
-                            </span>
-                        </div>
-                        <div style="padding: 20px;">
-                            <h2>Déverrouillez</h2>
-                            <p>Approchez-vous de la voiture indiquée sur la carte. Elle est verrouillée par défaut.</p>
-                            <p><strong>Astuce :</strong> Réservez la voiture avant de vous y rendre.</p>
-                            <ul>
-                                <li>Présentez votre <strong>carte membre / carte OPUS</strong> sur le lecteur sous le pare-brise, côté conducteur.</li>
-                            </ul>
-                            <p><em>Sécurité :</em> Si une ouverture forcée est tentée ou si un mouvement est détecté sans déverrouillage → une alarme sonore se déclenche.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 35% 65%">
-                    <div style="padding: 20px;">
-                        <h2>Roulez</h2>
-                        <p>Le compteur démarre dès que vous commencez votre trajet !</p>
-                        <ul>
-                            <li>Respectez le code de la route et portez la ceinture.</li>
-                            <li>Surveillez l’autonomie de la batterie.</li>
-                            <li>Consultez <a href="#">les règles de sécurité</a>.</li>
-                        </ul>
-                    </div>
-                    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        {% load static %}
-                        <span style="font-size: 200px; font-weight: bold; margin-right: 20px; line-height: 1;">
-                            03
-                        </span>
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Roulez">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 35% 65%;">
-                    <div style="padding: 20px; display: flex; justify-content: center; align-items: center;">
-                        {% load static %}
-                        <img style="border-radius: 8px;"
-                            src="{% static 'ecoflex/images/Admin_MaGjdxT.jpg' %}"
-                            alt="Rapportez">
-                    </div>
-                    <div style=" padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-size: 200px; font-weight: bold; line-height: 1; margin-right: 20px;">
-                            04
-                            </span>
-                        </div>
-                        <div style="padding: 20px;">
-                            <h2>Rapportez</h2>
-                            <ul>
-                                <li>Consultez la carte pour trouver une zone de stationnement autorisée.</li>
-                                <li>Garez la voiture correctement dans l’espace prévu.</li>
-                                <li>Terminez votre trajet dans l’application ou avec votre carte OPUS → attendez la confirmation (notification/lumière verte).</li>
-                            </ul>
-                            <h4>Cas particuliers</h4>
-                            <ul>
-                                <li>Zone pleine ou indisponible : dirigez-vous vers un autre emplacement proche.</li>
-                                <li>Difficulté à verrouiller ? Consultez <a href="#">l’aide dans l’application</a>.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
-    <script src="{% static 'ecoflex/js/fonctionnement.js' %}"></script>
+
+    <div id="bloc-velo" class="bloc-fonctionnement">
+
+        <section class="step row align-items-center py-5 step-first" data-step="01">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="step-content">
+                    <h2 class="step-title">Achetez votre trajet vélo</h2>
+                    <div class="feature-item">
+                        <div class="feature-text">Ouvrez l'application mobile ou le site web</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Consultez la carte pour trouver un vélo près de vous</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Connectez-vous ou créez un compte</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Sélectionnez le forfait qui vous convient</div>
+                    </div>
+
+                    <div class="action-links">
+                        <a href="{% url 'connexion' %}" class="action-link">→ Se connecter</a>
+                        <a href="{% url 'inscription' %}" class="action-link">→ S'inscrire</a>
+                        <a href="{% url 'tarif' %}" class="action-link">→ Voir les tarifs</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    01
+                </span>
+            </div>
+
+            <div class="col-md-5 d-flex justify-content-center">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/buy.png' %}" alt="Choisissez un vélo"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+        </section>
+
+        <section class="step row align-items-center py-5" data-step="02">
+            <div class="col-md-5 order-md-1 order-2 d-flex justify-content-center mt-4 mt-md-0">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/unlock.png' %}" alt="Déverrouillez le vélo"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+
+            <div class="col-md-2 order-md-2 order-1 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    02
+                </span>
+            </div>
+
+            <div class="col-md-5 order-md-3 order-3">
+                <div class="step-content">
+                    <h2 class="step-title">Déverrouillez</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Approchez-vous du vélo sélectionné</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Entrez le code sur la borne ou dans l'app</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Utilisez votre carte membre si disponible</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Attendez la lumière verte et c'est parti !</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="step row align-items-center py-5 step-last" data-step="03">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="step-content">
+                    <h2 class="step-title">Roulez et rapportez</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Le compteur démarre automatiquement</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Privilégiez les pistes cyclables sécurisées</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Utilisez le cadenas lors des arrêts courts</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Rapportez à une station, attendez la confirmation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    03
+                </span>
+            </div>
+
+            <div class="col-md-5 d-flex justify-content-center">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/return.png' %}" alt="Roulez et rapportez le vélo"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="bloc-trottinette" class="bloc-fonctionnement" style="display:none;">
+
+        <section class="step row align-items-center py-5 step-first" data-step="01">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="step-content">
+                    <h2 class="step-title">Achetez votre trajet</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Ouvrez l'application EcoFlex</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Repérez une trottinette disponible sur la carte</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Connectez-vous ou créez votre compte</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Choisissez votre forfait adapté à votre usage</div>
+                    </div>
+
+                    <div class="action-links">
+                        <a href="{% url 'tarif' %}" class="action-link">→ Voir les tarifs</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    01
+                </span>
+            </div>
+            <div class="col-md-5 d-flex justify-content-center">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/buy.png' %}" alt="Choisissez une trottinette"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+        </section>
+
+        <section class="step row align-items-center py-5" data-step="02">
+            <div class="col-md-5 order-md-1 order-2 d-flex justify-content-center mt-4 mt-md-0">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/unlock.png' %}" alt="Déverrouillez la trottinette"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+            <div class="col-md-2 order-md-2 order-1 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    02
+                </span>
+            </div>
+            <div class="col-md-5 order-md-3 order-3">
+                <div class="step-content">
+                    <h2 class="step-title">Déverrouillez</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Scannez le QR code sur la trottinette</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Entrez votre code de déverrouillage</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Vérifiez le niveau de batterie</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">La trottinette s'active, vous êtes prêt !</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="step row align-items-center py-5 step-last" data-step="03">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="step-content">
+                    <h2 class="step-title">Roulez et rapportez</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Portez un casque (fortement recommandé)</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Respectez le code de la route</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Garez dans une zone autorisée</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Terminez la course dans l'application</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    03
+                </span>
+            </div>
+            <div class="col-md-5 d-flex justify-content-center">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/return.png' %}" alt="Roulez et rapportez la trottinette"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="bloc-voiture" class="bloc-fonctionnement" style="display:none;">
+
+        <section class="step row align-items-center py-5 step-first" data-step="01">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="step-content">
+                    <h2 class="step-title">Réservez</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Localisez une voiture disponible près de vous</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Vérifiez la disponibilité horaire</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Connectez-vous à votre compte EcoFlex</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Confirmez votre réservation avec le forfait adapté</div>
+                    </div>
+
+                    <div class="action-links">
+                        <a href="{% url 'reserver_voiture' %}" class="action-link">→ Réserver</a>
+                        <a href="{% url 'tarif' %}" class="action-link">→ Tarifs</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    01
+                </span>
+            </div>
+            <div class="col-md-5 d-flex justify-content-center">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/buy.png' %}" alt="Choisissez une voiture"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+        </section>
+
+        <section class="step row align-items-center py-5" data-step="02">
+            <div class="col-md-5 order-md-1 order-2 d-flex justify-content-center mt-4 mt-md-0">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/unlock.png' %}" alt="Déverrouillez la voiture"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+            <div class="col-md-2 order-md-2 order-1 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    02
+                </span>
+            </div>
+            <div class="col-md-5 order-md-3 order-3">
+                <div class="step-content">
+                    <h2 class="step-title">Déverrouillez</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Rendez-vous à la voiture réservée</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Présentez votre carte membre ou OPUS</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">La voiture se déverrouille automatiquement</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Système d'alarme actif pour votre sécurité</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="step row align-items-center py-5 step-last" data-step="03">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="step-content">
+                    <h2 class="step-title">Roulez et rapportez</h2>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Conduisez en respectant le code de la route</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Profitez de la conduite électrique silencieuse</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Stationnez dans une zone autorisée</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-text">Terminez via l'app ou votre carte OPUS</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex justify-content-center">
+                <span class="badge bg-light text-dark fs-1 fw-bold rounded-pill position-relative z-1 px-4 py-3">
+                    03
+                </span>
+            </div>
+            <div class="col-md-5 d-flex justify-content-center">
+                {% load static %}
+                <div class="step-circle d-flex align-items-center justify-content-center">
+                    <img src="{% static 'ecoflex/images/return.png' %}" alt="Roulez et rapportez la voiture"
+                        class="img-fluid rounded-3 w-75">
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="{% static 'ecoflex/js/fonctionnement.js' %}"></script>
 {% endblock %}
