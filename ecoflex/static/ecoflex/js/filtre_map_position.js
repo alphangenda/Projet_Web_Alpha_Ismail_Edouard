@@ -1,4 +1,4 @@
-/* global L */
+/* global L, afficherMessage */
 
 let cartePrincipale;
 let toutesLesStations = [];
@@ -34,16 +34,12 @@ function geocoderAdresse(adresse, callback) {
                 });
             } else if (typeof window.afficherMessage === 'function') {
                     window.afficherMessage('warning', 'Adresse introuvable. Veuillez réessayer.');
-                } else {
-                    alert('Adresse introuvable. Veuillez réessayer.');
                 }
         })
         .catch(function(erreur) {
             console.error('Erreur de géocodage:', erreur);
             if (typeof window.afficherMessage === 'function') {
                 window.afficherMessage('danger', 'Erreur lors de la recherche de l\'adresse.');
-            } else {
-                alert('Erreur lors de la recherche de l\'adresse.');
             }
         });
 }
@@ -160,8 +156,6 @@ function gererSoumissionFiltre(e) {
         afficherStationsFiltrees(positionUtilisateur.lat, positionUtilisateur.lon, distanceMax, typeVehicule);
     } else if (typeof window.afficherMessage === 'function') {
             window.afficherMessage('warning', 'Veuillez entrer une adresse ou utiliser votre position actuelle.');
-        } else {
-            alert('Veuillez entrer une adresse ou utiliser votre position actuelle.');
         }
 }
 
@@ -183,14 +177,10 @@ function utiliserMaPosition() {
             console.error('Erreur de géolocalisation:', erreur);
             if (typeof window.afficherMessage === 'function') {
                 window.afficherMessage('danger', 'Impossible d\'obtenir votre position. Veuillez vérifier les permissions de géolocalisation.');
-            } else {
-                alert('Impossible d\'obtenir votre position. Veuillez vérifier les permissions de géolocalisation.');
             }
         });
     } else if (typeof window.afficherMessage === 'function') {
             window.afficherMessage('warning', 'La géolocalisation n\'est pas supportée par votre navigateur.');
-        } else {
-            alert('La géolocalisation n\'est pas supportée par votre navigateur.');
         }
 }
 
