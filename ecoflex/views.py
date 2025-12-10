@@ -370,6 +370,15 @@ def reserver_voiture(request):
     reservation_form = ReservationForm()
     annulation_form = AnnulationReservationForm(user=request.user)
 
+    abonnements_actifs = AbonnementUtilisateur.objects.filter(
+        utilisateur=request.user,
+        actif=True
+    ).select_related('offre')
+
+    nombre_abonnements_voiture = abonnements_actifs.filter(
+        offre__vehicule='voiture'
+    ).count()
+
     if request.method == 'POST':
         if 'reserver' in request.POST:
             reservation_form = ReservationForm(request.POST)
@@ -396,7 +405,9 @@ def reserver_voiture(request):
 
     return render(request, 'ecoflex/reservations.html', {
         'reservation_form': reservation_form,
-        'annulation_form': annulation_form
+        'annulation_form': annulation_form,
+        'abonnements_actifs': abonnements_actifs,
+        'nombre_abonnements_voiture': nombre_abonnements_voiture
     })
 
 
