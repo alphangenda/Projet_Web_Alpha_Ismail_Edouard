@@ -214,7 +214,7 @@
                     </div>
                 </div>
             </div>
-            {% if user.is_staff == false %}
+            {% if not user.is_staff %}
             <div class="bg-secondary bg-opacity-50 rounded-4 p-4 mb-3">
                 <h2 class="h4 fw-bold mb-4">Historique des locations</h2>
 
