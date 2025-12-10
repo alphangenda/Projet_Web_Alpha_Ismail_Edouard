@@ -68,11 +68,11 @@
                         {% endif %}
                     </div>
 
-                    <div class="button-group">
+                    <div class="action-links">
                         <button type="submit" name="reserver" class="btn-primary">
                             Confirmer la réservation
                         </button>
-                        <a href="{% url 'map_location' %}" class="btn-secondary">
+                        <a href="{% url 'map_location' %}" class="action-link full-width">
                             Retour à la carte
                         </a>
                     </div>
@@ -81,8 +81,8 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="form-card cancel-card">
-                <h2 class="form-title cancel-title">Annuler une réservation</h2>
+            <div class="form-card">
+                <h2 class="form-title">Annuler une réservation</h2>
 
                 <form method="post" novalidate>
                     {% csrf_token %}
@@ -112,11 +112,11 @@
                         <strong>Attention :</strong> L'annulation de votre réservation est définitive.
                     </div>
 
-                    <div class="button-group">
+                    <div class="action-links">
                         <button type="submit" name="annuler" class="btn-danger">
                             Confirmer l'annulation
                         </button>
-                        <a href="{% url 'map_location' %}" class="btn-secondary">
+                        <a href="{% url 'map_location' %}" class="action-link full-width">
                             Retour à la carte
                         </a>
                     </div>
@@ -124,8 +124,8 @@
                     <div class="info-box">
                         Vous n'avez aucune réservation active à annuler.
                     </div>
-                    <div class="button-group">
-                        <a href="{% url 'map_location' %}" class="btn-secondary full-width">
+                    <div class="action-links">
+                        <a href="{% url 'map_location' %}" class="action-link full-width">
                             Retour à la carte
                         </a>
                     </div>
@@ -264,7 +264,7 @@
         font-size: 16px;
         font-weight: 600;
         border: none;
-        border-radius: 25px;
+        border-radius: 15px;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
         text-align: center;
@@ -317,6 +317,35 @@
         background: #f8d7da;
         border: 1px solid #f5c6cb;
         color: #721c24;
+    }
+
+    .action-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .action-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 13px 20px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 12px rgba(19, 94, 12, 0.966);
+    }
+
+    .action-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(32, 201, 151, 0.5);
+        color: white;
     }
 
     @media (max-width: 992px) {
