@@ -14,6 +14,8 @@
         border: 1.5px solid rgba(40, 167, 69, 0.22);
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
         transition: all 0.6s ease;
+        position: relative;
+        z-index: 1000;
     }
 
     .search-widget:hover {
@@ -55,7 +57,7 @@
 
     #conteneur-recherche-ajax {
         position: relative;
-        z-index: 10000;
+        z-index: 1001;
     }
 
     .search-results {
@@ -70,7 +72,7 @@
         overflow: hidden;
         display: none;
         animation: fadeDown .25s ease;
-        z-index: 20000 !important;
+        z-index: 10000 !important;
     }
 
     .search-results .list-group-item {
@@ -104,6 +106,7 @@
         border: 1.5px solid rgba(40, 167, 69, 0.22);
         box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07);
         transition: all .3s ease;
+        z-index: 1;
     }
 
     .filter-card:hover {
