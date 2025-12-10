@@ -257,6 +257,7 @@
 {% block extra_js %}
 <script>
     window.utilisateurConnecte = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+    window.isAdmin = "{{ user.is_staff|yesno:'true,false' }}" === "true";
 </script>
 
 

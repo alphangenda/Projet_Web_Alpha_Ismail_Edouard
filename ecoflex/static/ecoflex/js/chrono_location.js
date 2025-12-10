@@ -1,5 +1,5 @@
-/* global annulerLocationURL */
-'use strict';
+/* global annulerLocationURL, afficherMessage */
+
 let tempsRestant = 30 * 60;
 let intervalID = null;
 const STORAGE_KEY = 'ecoflex_location_active';
@@ -123,7 +123,7 @@ function demarrerChronometre(restaurer = false) {
         font-size: 13px;
         font-weight: bold;
     `;
-    boutonAnnuler.addEventListener('click', terminerLocation);
+    boutonAnnuler.addEventListener('click', annuler_location);
 
     const boutonProlonger = document.createElement('button');
     boutonProlonger.innerText = 'Prolonger (+15 min)';
@@ -179,78 +179,94 @@ function formatageTemps(seconds) {
     return `${h}:${m}:${s}`;
 }
 
+function annuler_location() {
+    if (typeof window.demanderConfirmation === 'function') {
+        window.demanderConfirmation(
+            'Voulez-vous vraiment terminer la location ?',
+            function() {
+                terminerLocation();
+            }
+        );
+    }
+}
+
 function terminerLocation() {
-    if (confirm('Voulez-vous vraiment terminer la location ?')) {
-        if (intervalID) {
-            clearInterval(intervalID);
-            intervalID = null;
+    if (intervalID) {
+        clearInterval(intervalID);
+        intervalID = null;
+    }
+
+    const chronoContainer = document.getElementById('chronoContainer');
+    if (chronoContainer) {
+        chronoContainer.remove();
+    }
+
+    const locationId = localStorage.getItem('ecoflex_current_location_id');
+
+    if (typeof annulerLocationURL !== 'undefined') {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = annulerLocationURL;
+
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
         }
 
-        const chronoContainer = document.getElementById('chronoContainer');
-        if (chronoContainer) {
-            chronoContainer.remove();
+        if (locationId) {
+            const idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'location_id';
+            idInput.value = locationId;
+            form.appendChild(idInput);
         }
 
-        const locationId = localStorage.getItem('ecoflex_current_location_id');
-
-        if (typeof annulerLocationURL !== 'undefined') {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = annulerLocationURL;
-
-            const csrfToken = getCookie('csrftoken');
-            if (csrfToken) {
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = 'csrfmiddlewaretoken';
-                csrfInput.value = csrfToken;
-                form.appendChild(csrfInput);
-            }
-
-            if (locationId) {
-                const idInput = document.createElement('input');
-                idInput.type = 'hidden';
-                idInput.name = 'location_id';
-                idInput.value = locationId;
-                form.appendChild(idInput);
-            }
-
-            document.body.appendChild(form);
-            form.submit();
-            supprimerEtatLocation();
-        }
+        document.body.appendChild(form);
+        form.submit();
+        supprimerEtatLocation();
     }
 }
 
 function prolongerLocation() {
-    if (confirm('Prolonger la location de 15 minutes ? (Des frais supplémentaires peuvent s\'appliquer)')) {
-        const extensionTemps = 15 * 60;
-        tempsRestant += extensionTemps;
+    if (typeof window.demanderConfirmation === 'function') {
+        window.demanderConfirmation(
+            'Prolonger la location de 15 minutes ? (Des frais supplémentaires peuvent s\'appliquer)',
+            function() {
+                const extensionTemps = 15 * 60;
+                tempsRestant += extensionTemps;
 
-        const locationData = chargerEtatLocation();
-        if (locationData) {
-            locationData.tempsInitial += extensionTemps;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(locationData));
-        }
+                const locationData = chargerEtatLocation();
+                if (locationData) {
+                    locationData.tempsInitial += extensionTemps;
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(locationData));
+                }
 
-        const chronoDisplay = document.getElementById('chronoDisplay');
-        const chronoContainer = document.getElementById('chronoContainer');
-        const titre = chronoContainer.querySelector('div:first-child');
+                const chronoDisplay = document.getElementById('chronoDisplay');
+                const chronoContainer = document.getElementById('chronoContainer');
+                const titre = chronoContainer.querySelector('div:first-child');
 
-        if (chronoDisplay) {
-            chronoDisplay.innerText = formatageTemps(tempsRestant);
-            chronoDisplay.style.color = '#28a745';
-        }
+                if (chronoDisplay) {
+                    chronoDisplay.innerText = formatageTemps(tempsRestant);
+                    chronoDisplay.style.color = '#28a745';
+                }
 
-        if (chronoContainer) {
-            chronoContainer.style.borderColor = '#28a745';
-        }
+                if (chronoContainer) {
+                    chronoContainer.style.borderColor = '#28a745';
+                }
 
-        if (titre) {
-            titre.innerText = 'Location en cours';
-        }
+                if (titre) {
+                    titre.innerText = 'Location en cours';
+                }
 
-        alert('Location prolongée de 15 minutes!');
+                if (typeof afficherMessage === 'function') {
+                    afficherMessage('success', 'Location prolongée de 15 minutes! (Des frais supplémentaires peuvent s\'appliquer)');
+                }
+            }
+        );
     }
 }
 
