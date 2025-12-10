@@ -108,8 +108,6 @@ function confirmerLocation(stationId, stationNom) {
             if (!reponse.ok) {
                 if (typeof window.afficherMessage === 'function') {
                     window.afficherMessage('danger', data.error || 'Erreur lors de la réservation.');
-                } else {
-                    alert(data.error || 'Erreur lors de la réservation.');
                 }
                 throw new Error(data.error || 'Erreur serveur');
             }
@@ -122,8 +120,6 @@ function confirmerLocation(stationId, stationNom) {
 
             if (typeof window.afficherMessage === 'function') {
                 window.afficherMessage('success', data.message || `Location confirmée à la station "${stationNom}".`);
-            } else {
-                alert(data.message || `Location confirmée à la station "${stationNom}".`);
             }
             fermerModal();
 
@@ -173,8 +169,6 @@ function confirmerLocation(stationId, stationNom) {
         .catch(error => {
             if (typeof window.afficherMessage === 'function') {
                 window.afficherMessage('danger', 'Erreur lors de la location.');
-            } else {
-                alert('Erreur lors de la location.');
             }
         })
         .finally(() => {
