@@ -161,7 +161,7 @@ def connexion(request):
                 else:
                     login(request, user)
                     messages.success(request, f"Bienvenue {user.username} !")
-                    return redirect('profil')
+                    return redirect('accueil')
             else:
                 form.add_error(None, "Nom d'utilisateur ou mot de passe incorrect.")
         else:
