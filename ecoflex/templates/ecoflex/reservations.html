@@ -67,7 +67,16 @@
                         </div>
                         {% endif %}
                     </div>
-
+                    {% if user.is_staff %}
+                    <div class="action-links">
+                        <button type="submit" name="reserver" class="btn-primary" disabled>
+                            Confirmer la réservation (Non autorisé pour les administrateurs)
+                        </button>
+                        <a href="{% url 'map_location' %}" class="action-link full-width">
+                            Retour à la carte
+                        </a>
+                    </div>
+                    {% else %}
                     <div class="action-links">
                         <button type="submit" name="reserver" class="btn-primary">
                             Confirmer la réservation
@@ -76,6 +85,7 @@
                             Retour à la carte
                         </a>
                     </div>
+                    {% endif %}
                 </form>
             </div>
         </div>

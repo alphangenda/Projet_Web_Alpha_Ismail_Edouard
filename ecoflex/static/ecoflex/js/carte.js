@@ -11,8 +11,12 @@ function creerContenuPopup(station) {
         Capacité : ${station.capacite}`;
 
     if (window.utilisateurConnecte) {
-
-        if (!window.locationActive) {
+        if(window.isAdmin) {
+            contenu += `<div class="alert alert-warning text-center mt-3">
+                Vous ne pouvez pas louer de véhicule en tant qu'administrateur.
+            </div>`;
+        }
+        else if (!window.locationActive) {
             contenu += `<button onclick="ouvrirModalLocation(${station.id}, '${nomSecurise}', '${station.type_vehicule}')"
                 class="btn btn-success w-100 mt-2">Louer maintenant</button>`;
         } else {

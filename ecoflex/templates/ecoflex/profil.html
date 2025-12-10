@@ -214,7 +214,7 @@
                     </div>
                 </div>
             </div>
-
+            {% if user.is_staff == false %}
             <div class="bg-secondary bg-opacity-50 rounded-4 p-4 mb-3">
                 <h2 class="h4 fw-bold mb-4">Historique des locations</h2>
 
@@ -251,7 +251,7 @@
                     <p class="small text-muted text-center py-3">Aucune location enregistrée</p>
                 {% endif %}
             </div>
-
+            {% endif %}
             {% if user.is_staff %}
             <div class="bg-warning bg-opacity-50 rounded-4 p-4">
                 <h3 class="h4 fw-bold mb-2">Accès Administrateur</h3>
