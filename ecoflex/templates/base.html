@@ -89,7 +89,6 @@
         .navbar-nav {
             align-items: center;
         }
-        
     </style>
     {% block extra_css %}
 
@@ -248,12 +247,13 @@
         });
     </script>
 
+    {% endblock %}
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>const annulerLocationURL = "{% url 'annuler_location' %}";</script>
     <script src="{% static 'ecoflex/js/chrono_location.js' %}"></script>
     <script src="{% static 'ecoflex/js/retroactionClient.js' %}"></script>
-    {% endblock %}
 
 
 </body>
