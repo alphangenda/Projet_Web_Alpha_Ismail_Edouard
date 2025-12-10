@@ -24,7 +24,7 @@ function creerContenuPopup(station) {
     } else {
         contenu += `<div class="alert alert-info text-center mt-3">
             Connectez-vous pour louer un véhicule.<br>
-            <a href="/connexion/" class="btn btn-primary btn-sm mt-2">Se connecter</a>
+            <a href="/connexion/" class="btn btn-primary btn-sm mt-2" style="text-decoration:none; color:white;">Se connecter</a>
         </div>`;
     }
 
