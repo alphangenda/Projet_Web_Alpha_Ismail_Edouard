@@ -361,6 +361,134 @@ Accueil - EcoFlex
 
     .more-options {}
 </style>
+
+<style>
+    .faq-section {
+        margin-top: 60px;
+    }
+
+    .faq-container-custom {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 60px;
+        gap: 60px;
+    }
+
+    .faq-left h2 {
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 0.95;
+        margin: 0;
+        color: #202020;
+    }
+
+    .faq-right {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .faq-item {
+        cursor: pointer;
+    }
+
+    .faq-line {
+        height: 2px;
+        background: #000;
+        width: 100%;
+    }
+
+    .faq-content {
+        padding: 24px 0;
+    }
+
+    .faq-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .faq-question {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        color: #202020;
+        flex: 1;
+    }
+
+    .faq-plus {
+        font-size: 2rem;
+        font-weight: 300;
+        color: #202020;
+        transition: transform 0.3s ease;
+        min-width: 30px;
+        text-align: center;
+    }
+
+    .faq-item.active .faq-plus {
+        transform: rotate(45deg);
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+        max-height: 500px;
+        opacity: 1;
+        margin-top: 12px;
+    }
+
+    .faq-answer p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #4a4a4a;
+        margin: 0;
+        padding-right: 20px;
+    }
+
+    .faq-contact {
+        margin-top: 40px;
+        text-align: center;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 12px;
+        margin-left: 60px;
+        margin-right: 60px;
+    }
+
+    .faq-contact p {
+        margin: 0;
+        color: #4a4a4a;
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+        .faq-container-custom {
+            flex-direction: column;
+            padding: 30px 20px;
+        }
+
+        .faq-left h2 {
+            font-size: 3rem;
+        }
+
+        .faq-right {
+            width: 100%;
+        }
+
+        .faq-contact {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    }
+</style>
+
 {% endblock %}
 
 {% block content %}
@@ -570,7 +698,100 @@ Accueil - EcoFlex
 
     </div>
 
-    <div class="faq-container">
+
+<div class="faq-section">
+    <div class="faq-container-custom">
+        <div class="faq-left">
+            <h2>FAQ<br>express</h2>
+        </div>
+
+        <div class="faq-right">
+            <div class="faq-item" data-faq="0">
+                <div class="faq-line"></div>
+                <div class="faq-content">
+                    <div class="faq-header">
+                        <h3 class="faq-question">Comment fonctionne le système de location ?</h3>
+                        <span class="faq-plus">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Inscrivez-vous, choisissez un forfait, localisez un véhicule sur la carte, déverrouillez-le avec votre carte membre et c'est parti ! Retournez-le à n'importe quelle station disponible.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-faq="1">
+                <div class="faq-line"></div>
+                <div class="faq-content">
+                    <div class="faq-header">
+                        <h3 class="faq-question">Quels sont les modes de paiement acceptés ?</h3>
+                        <span class="faq-plus">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Nous acceptons les cartes de crédit (Visa, Mastercard), cartes de débit et les paiements en ligne sécurisés. Votre carte membre contient vos informations de facturation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-faq="2">
+                <div class="faq-line"></div>
+                <div class="faq-content">
+                    <div class="faq-header">
+                        <h3 class="faq-question">Que faire si le véhicule a un problème technique ?</h3>
+                        <span class="faq-plus">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Contactez immédiatement notre service client au (581) 433-1251. Ne continuez pas à utiliser le véhicule. Nous vous guiderons vers un véhicule de remplacement et aucun frais ne sera facturé.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-faq="3">
+                <div class="faq-line"></div>
+                <div class="faq-content">
+                    <div class="faq-header">
+                        <h3 class="faq-question">Puis-je réserver un véhicule à l'avance ?</h3>
+                        <span class="faq-plus">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Oui ! Les voitures peuvent être réservées à l'avance via notre système de réservation. Les vélos et trottinettes fonctionnent sur le principe du premier arrivé, premier servi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-faq="4">
+                <div class="faq-line"></div>
+                <div class="faq-content">
+                    <div class="faq-header">
+                        <h3 class="faq-question">Y a-t-il des frais de retard ?</h3>
+                        <span class="faq-plus">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Les forfaits occasionnels facturent par minute après la durée incluse. Les abonnements mensuels/annuels ont des trajets illimités de 30 minutes. Prolongez facilement votre location via l'interface.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-faq="5">
+                <div class="faq-line"></div>
+                <div class="faq-content">
+                    <div class="faq-header">
+                        <h3 class="faq-question">Que se passe-t-il si je ne trouve pas de station disponible ?</h3>
+                        <span class="faq-plus">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>L'application affiche en temps réel les stations disponibles. En cas de saturation, des stations alternatives proches vous seront suggérées automatiquement.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-line"></div>
+        </div>
+    </div>
+
+    <div class="faq-contact">
+        <p>D'autres questions ? Contactez-nous au <strong>(581) 433-1251</strong> ou par email à <strong>contact@ecoflex.com</strong></p>
+    </div>
+</div>
 
         <div class="faq-left">
             <h2>FAQ<br>express</h2>
@@ -619,6 +840,22 @@ Accueil - EcoFlex
 
 {% endblock %}
 {% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqItems = document.querySelectorAll('.faq-item');
 
+        faqItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const isActive = this.classList.contains('active');
+
+                faqItems.forEach(i => i.classList.remove('active'));
+
+                if (!isActive) {
+                    this.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
 <script src="{% static 'ecoflex/js/accueil_cards_tarif.js' %}"></script>
 {% endblock %}
