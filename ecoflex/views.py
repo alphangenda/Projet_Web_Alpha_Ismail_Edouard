@@ -98,17 +98,36 @@ class StationListAPIView(generics.ListAPIView):
     serializer_class = StationSerializerJson
 
 def profil(request):
-    if request.user.is_authenticated:
-        dernieres_locations = Location.objects.filter(utilisateur=request.user).order_by('-date_location')[:10]
+    if not request.user.is_authenticated:
+        return render(request, "ecoflex/profil.html")
 
-        now = timezone.now()
+    dernieres_locations = Location.objects.filter(
+        utilisateur=request.user
+    ).order_by('-date_location')[:10]
 
-        return render(request, 'ecoflex/profil.html', {
-            'dernieres_locations': dernieres_locations,
-            'now': now
+    now = timezone.now()
+
+    abonnements_types = [
+        ("velo", "Vélo"),
+        ("trottinette", "Trottinette"),
+        ("voiture", "Voiture"),
+    ]
+
+    abonnements_utilisateur = []
+    for code, label in abonnements_types:
+        abo = request.user.abonnement_actif_par_vehicule(code)
+        abonnements_utilisateur.append({
+            "code": code,
+            "label": label,
+            "abonnement": abo
         })
 
-    return render(request, 'ecoflex/profil.html')
+    return render(request, 'ecoflex/profil.html', {
+        'dernieres_locations': dernieres_locations,
+        'now': now,
+        'abonnements_utilisateur': abonnements_utilisateur,
+    })
+
 
 def gestion_users(request):
     if not request.user.is_authenticated or not request.user.is_staff:
