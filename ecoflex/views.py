@@ -34,6 +34,8 @@ def tarif(request):
 def abonnement(request):
     return render(request, 'ecoflex/tarif.html')
 
+
+
 def fonctionnement(request):
     return render(request, 'ecoflex/fonctionnement.html')
 

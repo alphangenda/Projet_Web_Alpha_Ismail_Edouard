@@ -5,19 +5,161 @@
 
 {% block extra_css %}
 <style>
-    #carteMembulleBulle:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 16px rgba(40, 167, 69, 0.5) !important;
+    .search-widget {
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        padding: 25px 45px;
+        border-radius: 20px;
+        border: 1.5px solid rgba(40, 167, 69, 0.22);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
+        transition: all 0.6s ease;
     }
 
-    #carteMembreWidget.expanded #carteMembulleBulle {
-        display: none !important;
+    .search-widget:hover {
+        transform: translateY(-4px) scale(1.01);
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 9px 20px rgba(0, 0, 0, 0.8);
+
     }
 
-    #carteMembreWidget.expanded #carteMembreRectangle {
-        display: block !important;
-        animation: slideIn 0.3s ease;
+    .search-title {
+        letter-spacing: .5px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 18px;
     }
+
+    .search-container {
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 14px;
+        border: 1.5px solid rgba(0, 0, 0, 0.04);
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        backdrop-filter: blur(8px);
+        font-size: 16px;
+        outline: none;
+        transition: all .25s ease;
+    }
+
+    .search-input:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 14px rgba(40, 167, 69, 0.5);
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    #conteneur-recherche-ajax {
+        position: relative;
+        z-index: 10000;
+    }
+
+    .search-results {
+        position: absolute;
+        width: 100%;
+        top: calc(100% + 6px);
+        left: 0;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        border: 1px solid #d4d4d4;
+        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        display: none;
+        animation: fadeDown .25s ease;
+        z-index: 20000 !important;
+    }
+
+    .search-results .list-group-item {
+        padding: 14px 16px !important;
+        border: none !important;
+        transition: background .2s ease;
+        z-index: 9999999;
+    }
+
+    .search-results .list-group-item:hover {
+        background: rgba(40, 167, 69, 0.1);
+    }
+
+    @keyframes fadeDown {
+        from {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .filter-card {
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(12px);
+        border-radius: 22px;
+        padding: 25px 30px;
+        border: 1.5px solid rgba(40, 167, 69, 0.22);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07);
+        transition: all .3s ease;
+    }
+
+    .filter-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(40, 167, 69, 0.28);
+    }
+
+    .filter-card-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 18px;
+    }
+
+    .filter-card label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #3f3f3f;
+    }
+
+    .filter-card .form-control,
+    .filter-card .form-select {
+        border-radius: 14px;
+        border: 1.5px solid rgba(0, 0, 0, 0.04);
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        backdrop-filter: blur(8px);
+        font-size: 15px;
+        padding: 12px 14px;
+        transition: all .25s;
+    }
+
+    .filter-card .form-control:focus,
+    .filter-card .form-select:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 12px rgba(40, 167, 69, 0.55);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .filter-card .btn-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        padding: 12px 0;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all .25s;
+    }
+
+    .filter-card .btn-success:hover {
+        box-shadow: 0 6px 18px rgba(32, 201, 151, 0.5);
+        transform: translateY(-2px);
+    }
+
+
+
+
 
     @keyframes slideIn {
         from {
@@ -45,22 +187,21 @@
 </div>
 {% endif %}
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Carte interactive - EcoFlex</h2>
 
-    <div class="card shadow-sm mb-3">
-        <div class="card-body">
-            <h6 class="mb-2">Recherche rapide de stations</h6>
-            <div id="conteneur-recherche-ajax" style="position: relative;">
-                <input type="text" id="input-recherche-ajax" class="form-control"
-                    placeholder="Tapez le nom d'une station (ex: Cartier, Grande Allée...)" autocomplete="off">
-                <div id="resultats-recherche-ajax"></div>
-            </div>
+    <div class="search-widget mb-4">
+        <h6 class="search-title">Recherche rapide de stations</h6>
+
+        <div id="conteneur-recherche-ajax" class="search-container">
+            <input type="text" id="input-recherche-ajax" class="search-input" placeholder="Rechercher une station…"
+                autocomplete="off">
+
+            <div id="resultats-recherche-ajax" class="search-results"></div>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-4 filter-card">
         <div class="card-body">
-            <h5 class="card-title mb-3">Filtrer par distance depuis votre position</h5>
+            <h5 class="card-title mb-3 filter-card-title">Filtrer par distance depuis votre position</h5>
             <form id="formulaireFiltre" class="row g-3">
                 <div class="col-md-4">
                     <label for="adresse" class="form-label">Adresse ou lieu</label>
@@ -89,7 +230,7 @@
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">&nbsp;</label>
-                    <button type="submit" class="btn btn-success w-100">Rechercher</button>
+                    <button type="submit" class="btn btn-success w-100" id="rechercheDistance">Rechercher</button>
                 </div>
             </form>
         </div>
@@ -99,44 +240,6 @@
         <strong>Résultats :</strong> <span id="nombreResultats">0</span> véhicule(s) trouvé(s)
     </div>
 
-    {% if user.is_authenticated %}
-    <div style="position: absolute; top: 80px; right: 20px; z-index: 1000; transition: all 0.3s;"
-        id="carteMembreWidget">
-        <div onclick="toggleCarte()"
-            style="width: 60px; height: 60px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-radius: 50%; box-shadow: 0 4px 12px green; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;"
-            id="carteMembulleBulle">
-            <img src="{% static 'ecoflex/images/3425081.png' %}" alt="Carte"
-                style="width: 32px; height: 32px; object-fit: contain;">
-        </div>
-
-        <div style="background: white; border-radius: 12px; box-shadow: 0 8px 24px black; padding: 20px; min-width: 250px; display: none; border: 2px solid #28a745;"
-            id="carteMembreRectangle">
-            <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">
-                <span style="font-weight: 600; font-size: 18px; color: #28a745;">🌿 Carte Membre</span>
-                <button onclick="toggleCarte()" aria-label="Fermer"
-                    style="background: none; border: none; font-size: 24px; color: #6c757d; cursor: pointer; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: color 0.2s;">×</button>
-            </div>
-
-            <div style="margin-top: 10px;">
-                <div
-                    style=" font-size: 12px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
-                    Numéro de permis
-                </div>
-                <div
-                    style="font-size: 24px; font-weight: 700; color: #212529; font-family: 'Courier New', monospace; letter-spacing: 2px;">
-                    {{ user.numero_permis|default:"N/A" }}
-                </div>
-            </div>
-
-            <div
-                style="display: inline-block; background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-top: 12px; text-transform: uppercase;">
-                ✓ Membre Actif
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
     <div id="map" style="height: 600px; border-radius: 12px;"></div>
 
     <div class="alert alert-info text-center mt-4" role="alert">
@@ -145,10 +248,13 @@
 </div>
 {% endblock %}
 
+
+
 {% block extra_js %}
 <script>
     window.utilisateurConnecte = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
 </script>
+
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

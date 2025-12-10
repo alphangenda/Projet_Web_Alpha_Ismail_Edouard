@@ -108,11 +108,31 @@ function afficherStationsFiltrees(centreLat, centreLon, distanceMax, typeVehicul
     document.getElementById('nombreResultats').textContent = stationsFiltrees.length;
     document.getElementById('resultatsRecherche').style.display = 'block';
 
+    setTimeout(() => {
+        const map = document.getElementById("map");
+
+        map.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        setTimeout(() => {
+            window.scrollBy({
+                top: -50,
+                behavior: "smooth"
+            });
+        }, 375);
+
+    }, 100);
+
     console.log('Filtres appliqués : ', {
         centreLat, centreLon, distanceMax, typeVehicule,
         nbStationsAvant: toutesLesStations.length
     });
 }
+
+
+
 
 function chargerStationsPourFiltre() {
     return fetch('/api/stations/')

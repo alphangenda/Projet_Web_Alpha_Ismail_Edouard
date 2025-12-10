@@ -1,20 +1,17 @@
-'use strict';
-document.addEventListener('DOMContentLoaded', function () {
-    let select = document.getElementById('choix-fonctionnement');
+document.addEventListener("DOMContentLoaded", () => {
+  const typeButtons = document.querySelectorAll(".type-btn");
+  const blocs = document.querySelectorAll(".bloc-fonctionnement");
 
-    select.addEventListener('change', function () {
-        let choix = this.value;
+  typeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.dataset.target;
 
-        document.getElementById('bloc-velo').style.display = 'none';
-        document.getElementById('bloc-trottinette').style.display = 'none';
-        document.getElementById('bloc-voiture').style.display = 'none';
+      typeButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
 
-        if (choix === 'velo') {
-            document.getElementById('bloc-velo').style.display = 'block';
-        } else if (choix === 'trottinette') {
-            document.getElementById('bloc-trottinette').style.display = 'block';
-        } else if (choix === 'voiture') {
-            document.getElementById('bloc-voiture').style.display = 'block';
-        }
+      blocs.forEach((bloc) => {
+        bloc.style.display = bloc.id === targetId ? "block" : "none";
+      });
     });
+  });
 });
