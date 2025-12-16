@@ -33,8 +33,8 @@ function afficherResultatsRecherche(data) {
     let html = '<div class="list-group">';
 
     data.results.forEach(station => {
-        const icone = station.type_vehicule === 'velo' ? '🚴' :
-                     station.type_vehicule === 'trottinette' ? '🛴' : '🚗';
+        const icone = station.type_vehicule === 'velo' ? '' :
+                     station.type_vehicule === 'trottinette' ? '' : '';
 
         html += `
             <a href="#" class="list-group-item list-group-item-action result-item"
