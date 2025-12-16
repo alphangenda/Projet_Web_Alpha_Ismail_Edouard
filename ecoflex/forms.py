@@ -147,6 +147,8 @@ class ReservationForm(forms.Form):
         }
     )
 
+
+
     heure_fin = forms.TimeField(
         label="Heure de fin",
         widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
